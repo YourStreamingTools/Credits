@@ -1,5 +1,14 @@
+function formatFollowersData(followers) {
+  let formattedData = "Recent Followers:\n";
+  followers.forEach((follower, index) => {
+    formattedData += `${index + 1}. ${follower.follower_name} - ${follower.timestamp}\n`;
+  });
+  return formattedData;
+}
+
 function sendToDiscord(section, buttonId) {
   var button = document.getElementById(buttonId);
+  console.log("Button clicked!");
 
   if (!webhookURL) {
     alert("Webhook URL is not available.");
@@ -8,39 +17,32 @@ function sendToDiscord(section, buttonId) {
 
   switch (section) {
     case "followers":
-      sendWebhook(webhookURL, "Recent Followers", formatFollowersData());
+      sendWebhook(webhookURL, "Recent Followers", formatFollowersData(followerData));
       break;
     case "subscribers":
-      sendWebhook(webhookURL, "Recent Subscribers", formatSubscribersData());
+      sendWebhook(webhookURL, "Recent Subscribers", formatSubscribersData(subscriberData));
       break;
     case "cheers":
-      sendWebhook(webhookURL, "Recent Cheers", formatCheersData());
+      sendWebhook(webhookURL, "Recent Cheers", formatCheersData(cheerData));
       break;
     case "raids":
-      sendWebhook(webhookURL, "Recent Raids", formatRaidsData());
+      sendWebhook(webhookURL, "Recent Raids", formatRaidsData(raidData));
       break;
     default:
       alert("Invalid section.");
       break;
   }
 
-  // Disable the button after clicking
-  button.disabled = true;
-  // Change the button text to indicate success
   button.innerHTML = "Sent to Discord &#10004;";
-  // Change the button color to green
   button.style.backgroundColor = "green";
 }
 
-
 function sendWebhook(webhookURL, title, data) {
-  // Create the payload for the webhook
   var payload = {
     username: "YourStreamingToolsBot",
     content: `**${title}**\n\n${data}`
   };
 
-  // Send the payload to the webhook
   fetch(webhookURL, {
     method: 'POST',
     headers: {
