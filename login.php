@@ -134,10 +134,10 @@ if (isset($_GET['code'])) {
 <html>
 <head>
     <title>YourStreamingTools - Twitch Login</title>
-    <link rel="icon" href="https://cdn.yourstreaming.tools/img/logo.ico" sizes="32x32" />
-    <link rel="icon" href="https://cdn.yourstreaming.tools/img/logo.ico" sizes="192x192" />
-    <link rel="apple-touch-icon" href="https://cdn.yourstreaming.tools/img/logo.ico" />
-    <meta name="msapplication-TileImage" content="https://cdn.yourstreaming.tools/img/logo.ico" />
+    <link rel="icon" href="https://cdn.yourstreaming.tools/img/logo.jpeg" sizes="32x32" />
+    <link rel="icon" href="https://cdn.yourstreaming.tools/img/logo.jpeg" sizes="192x192" />
+    <link rel="apple-touch-icon" href="https://cdn.yourstreaming.tools/img/logo.jpeg" />
+    <meta name="msapplication-TileImage" content="https://cdn.yourstreaming.tools/img/logo.jpeg" />
 </head>
 <body>
     <p>Please wait while we redirect you to Twitch for authorization...</p>
