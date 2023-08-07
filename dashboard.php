@@ -36,6 +36,50 @@ $twitchDisplayName = $user['twitch_display_name'];
 $twitch_profile_image_url = $user['profile_image'];
 $is_admin = ($user['is_admin'] == 1);
 
+if (isset($_POST['resetDatabase'])) {
+  // Delete the SQLite database file
+  if (file_exists($database_name)) {
+    unlink($database_name);
+  }
+
+  // Recreate the SQLite database and tables
+  $conn = new SQLite3($database_name);
+
+  // Create tables for different interactions (followers, subscribers, cheers, raids)
+  $createFollowersTable = "CREATE TABLE IF NOT EXISTS followers (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    follower_name TEXT,
+    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+  )";
+
+  $createSubscribersTable = "CREATE TABLE IF NOT EXISTS subscribers (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    subscriber_name TEXT,
+    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+  )";
+
+  $createCheersTable = "CREATE TABLE IF NOT EXISTS cheers (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT,
+    cheer_amount INTEGER,
+    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+  )";
+
+  $createRaidsTable = "CREATE TABLE IF NOT EXISTS raids (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    raider_name TEXT,
+    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+  )";
+
+  // Execute the table creation queries
+  $conn->exec($createFollowersTable);
+  $conn->exec($createSubscribersTable);
+  $conn->exec($createCheersTable);
+  $conn->exec($createRaidsTable);
+
+  $conn->close();
+}
+
 $database_name = "{$username}.db";
 // Create the SQLite database if it doesn't exist
 if (!file_exists($database_name)) {
@@ -117,6 +161,8 @@ $raidResults = $conn->query("SELECT raider_name, timestamp FROM raids ORDER BY t
 <div class="row column">
 <br>
 <h1><?php echo "$greeting, <img id='profile-image' src='$twitch_profile_image_url' width='50px' height='50px' alt='$twitchDisplayName Profile Image'>$twitchDisplayName!"; ?></h1>
+<br>
+<form method="post"><button type="submit" name="deleteDatabase" class="button alert">Reset Data</button></form>
 <br>
 <!-- Display sections for each data type -->
 <div class="data-section">
