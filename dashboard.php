@@ -37,12 +37,49 @@ $twitch_profile_image_url = $user['profile_image'];
 $is_admin = ($user['is_admin'] == 1);
 
 $database_name = "{$username}.db";
+// Create the SQLite database if it doesn't exist
+if (!file_exists($database_name)) {
+  $conn = new SQLite3($database_name);
+
+  // Create tables for different interactions (followers, subscribers, cheers, raids)
+  $createFollowersTable = "CREATE TABLE IF NOT EXISTS followers (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    follower_name TEXT,
+    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+  )";
+
+  $createSubscribersTable = "CREATE TABLE IF NOT EXISTS subscribers (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    subscriber_name TEXT,
+    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+  )";
+
+  $createCheersTable = "CREATE TABLE IF NOT EXISTS cheers (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT,
+    cheer_amount INTEGER,
+    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+  )";
+
+  $createRaidsTable = "CREATE TABLE IF NOT EXISTS raids (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    raider_name TEXT,
+    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+  )";
+
+  // Execute the table creation queries
+  $conn->exec($createFollowersTable);
+  $conn->exec($createSubscribersTable);
+  $conn->exec($createCheersTable);
+  $conn->exec($createRaidsTable);
+
+  $conn->close();
+}
 $conn = new SQLite3($database_name);
 $followerResults = $conn->query("SELECT follower_name, timestamp FROM followers ORDER BY timestamp DESC");
 $subscriberResults = $conn->query("SELECT subscriber_name, timestamp FROM subscribers ORDER BY timestamp DESC");
 $cheerResults = $conn->query("SELECT username, cheer_amount, timestamp FROM cheers ORDER BY timestamp DESC");
 $raidResults = $conn->query("SELECT raider_name, timestamp FROM raids ORDER BY timestamp DESC");
-$conn->close();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -126,6 +163,7 @@ $conn->close();
       while ($row = $raidResults->fetchArray(SQLITE3_ASSOC)) {
         echo "<li>{$row['raider_name']} - {$row['timestamp']}</li>";
       }
+      $conn->close();
     ?>
   </ul>
 </div>
