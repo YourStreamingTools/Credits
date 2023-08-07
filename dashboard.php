@@ -173,18 +173,22 @@ $totalViewersFromRaids = 0;
 <form method="post"><button type="submit" name="deleteDatabase" class="button alert">Reset Data</button></form>
 <br>
 <!-- Display sections for each data type -->
-<div class="data-section">
-  <h4>Recent Followers</h4>
-  <ul class="custom-list">
-    <?php
-      // Fetch and display recent followers data from the SQLite database
-      while ($row = $followerResults->fetchArray(SQLITE3_ASSOC)) {
-        echo "<li>{$row['follower_name']} - {$row['timestamp']}</li>";
-      }
-    ?>
-  </ul>
-</div>
 <?php
+// Fetch and display recent followers data from the SQLite database
+echo "<div class='data-section'>";
+echo "<h4>Recent Followers</h4>";
+echo "<table class='custom-table'>";
+echo "<tr><th>Follower</th>";
+echo "<th>Timestamp</th></tr>";
+
+while ($row = $followerResults->fetchArray(SQLITE3_ASSOC)) {
+  echo "<tr><td>{$row['follower_name']}</td>";
+  echo "<td>{$row['timestamp']}</td></tr>";
+}
+
+echo "</table>";
+echo "</div>";
+
 // Fetch and display recent subscribers data from the SQLite database
 echo "<div class='data-section'>";
 echo "<h4>Recent Subscribers</h4>";
