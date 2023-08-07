@@ -35,25 +35,6 @@ $username = $user['username'];
 $twitchDisplayName = $user['twitch_display_name'];
 $twitch_profile_image_url = $user['profile_image'];
 $is_admin = ($user['is_admin'] == 1);
-
-// Get the selected category filter, default to "all" if not provided
-$categoryFilter = isset($_GET['category']) ? $_GET['category'] : 'all';
-
-// Build the SQL query based on the category filter
-if ($categoryFilter === 'all') {
-  $sql = "SELECT * FROM todos WHERE user_id = '$user_id' ORDER BY id ASC";
-} else {
-  $categoryFilter = mysqli_real_escape_string($conn, $categoryFilter);
-  $sql = "SELECT * FROM todos WHERE user_id = '$user_id' AND category = '$categoryFilter' ORDER BY id ASC";
-}
-
-$result = mysqli_query($conn, $sql);
-
-// Handle errors
-if (!$result) {
-  echo "Error: " . mysqli_error($conn);
-  exit();
-}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -62,10 +43,10 @@ if (!$result) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>YourStreamingTools - Dashboard</title>
     <link rel="stylesheet" href="https://dhbhdrzi4tiry.cloudfront.net/cdn/sites/foundation.min.css">
-    <link rel="stylesheet" href="https://cdn.yourlist.online/css/custom.css">
-    <script src="https://cdn.yourlist.online/js/about.js"></script>
-  	<link rel="icon" href="https://cdn.yourstreaming.tools/img/logo.ico" type="image/png" />
-  	<link rel="apple-touch-icon" href="https://cdn.yourstreaming.tools/img/logo.ico">
+    <link rel="stylesheet" href="https://cdn.yourstreaming.tools/css/custom.css">
+    <script src="https://cdn.yourstreaming.tools/js/about.js"></script>
+  	<link rel="icon" href="https://cdn.yourstreaming.tools/img/logo.jpeg">
+  	<link rel="apple-touch-icon" href="https://cdn.yourstreaming.tools/img/logo.jpeg">
   </head>
 <body>
 <!-- Navigation -->
