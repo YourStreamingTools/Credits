@@ -68,6 +68,7 @@ if (isset($_POST['resetDatabase'])) {
   $createRaidsTable = "CREATE TABLE IF NOT EXISTS raids (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     raider_name TEXT,
+    viewers INTEGER,
     timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
   )";
 
@@ -108,6 +109,7 @@ if (!file_exists($database_name)) {
   $createRaidsTable = "CREATE TABLE IF NOT EXISTS raids (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     raider_name TEXT,
+    viewers INTEGER,
     timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
   )";
 
@@ -124,6 +126,8 @@ $followerResults = $conn->query("SELECT follower_name, timestamp FROM followers 
 $subscriberResults = $conn->query("SELECT subscriber_name, timestamp FROM subscribers ORDER BY timestamp DESC");
 $cheerResults = $conn->query("SELECT username, cheer_amount, timestamp FROM cheers ORDER BY timestamp DESC");
 $raidResults = $conn->query("SELECT raider_name, timestamp FROM raids ORDER BY timestamp DESC");
+$totalRaidersToday = 0;
+$totalViewersFromRaids = 0;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -200,19 +204,17 @@ $raidResults = $conn->query("SELECT raider_name, timestamp FROM raids ORDER BY t
     ?>
   </ul>
 </div>
-
-<div class="data-section">
-  <h4>Recent Raids</h4>
-  <ul class="custom-list">
-    <?php
-      // Fetch and display recent raids data from the SQLite database
-      while ($row = $raidResults->fetchArray(SQLITE3_ASSOC)) {
-        echo "<li>{$row['raider_name']} - {$row['timestamp']}</li>";
-      }
-      $conn->close();
-    ?>
-  </ul>
-</div>
+<?php
+echo "<div class='data-section'>";
+echo "<h4>Recent Raids | Total Raiders: $totalRaidersToday ($totalViewersFromRaids)</h4>";
+echo "<ul class='custom-list'>";
+  // Fetch and display recent raid data from the SQLite database
+  while ($row = $raidResults->fetchArray(SQLITE3_ASSOC)) {
+    echo "<li>{$row['raider_name']} - Viewers: {$row['viewers']} - {$row['timestamp']}</li>";
+  }
+echo "</ul>";
+echo "</div>";
+?>
 </div>
 </div>
 
