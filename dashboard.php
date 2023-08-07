@@ -200,6 +200,7 @@ while ($row = $subscriberResults->fetchArray(SQLITE3_ASSOC)) {
   echo "<td>{$months}</td>";
   echo "<td>{$row['timestamp']}</td></tr>";
 }
+
 echo "</table>";
 echo "</div>";
 
@@ -235,6 +236,8 @@ echo "<td>$totalViewersFromRaids</td></tr>";
 
 echo "</table>";
 echo "</div>";
+
+$conn->close();
 ?>
 </div>
 </div>
