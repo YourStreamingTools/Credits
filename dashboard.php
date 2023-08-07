@@ -35,6 +35,14 @@ $username = $user['username'];
 $twitchDisplayName = $user['twitch_display_name'];
 $twitch_profile_image_url = $user['profile_image'];
 $is_admin = ($user['is_admin'] == 1);
+
+$database_name = "{$username}.db";
+$conn = new SQLite3($database_name);
+$followerResults = $conn->query("SELECT follower_name, timestamp FROM followers ORDER BY timestamp DESC");
+$subscriberResults = $conn->query("SELECT subscriber_name, timestamp FROM subscribers ORDER BY timestamp DESC");
+$cheerResults = $conn->query("SELECT username, cheer_amount, timestamp FROM cheers ORDER BY timestamp DESC");
+$raidResults = $conn->query("SELECT raider_name, timestamp FROM raids ORDER BY timestamp DESC");
+$conn->close();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -73,6 +81,54 @@ $is_admin = ($user['is_admin'] == 1);
 <br>
 <h1><?php echo "$greeting, <img id='profile-image' src='$twitch_profile_image_url' width='50px' height='50px' alt='$twitchDisplayName Profile Image'>$twitchDisplayName!"; ?></h1>
 <br>
+<!-- Add sections to display fetched data using custom styling -->
+<div class="data-section">
+  <h2>Recent Followers</h2>
+  <ul class="custom-list">
+    <?php
+      // Fetch and display recent follower data from the SQLite database
+      while ($row = $followerResults->fetchArray(SQLITE3_ASSOC)) {
+        echo "<li>{$row['follower_name']} - {$row['timestamp']}</li>";
+      }
+    ?>
+  </ul>
+</div>
+
+<div class="data-section">
+  <h2>Recent Subscribers</h2>
+  <ul class="custom-list">
+    <?php
+      // Fetch and display recent subscriber data from the SQLite database
+      while ($row = $subscriberResults->fetchArray(SQLITE3_ASSOC)) {
+        echo "<li>{$row['subscriber_name']} - {$row['timestamp']}</li>";
+      }
+    ?>
+  </ul>
+</div>
+
+<div class="data-section">
+  <h2>Recent Cheers</h2>
+  <ul class="custom-list">
+    <?php
+      // Fetch and display recent cheers data from the SQLite database
+      while ($row = $cheerResults->fetchArray(SQLITE3_ASSOC)) {
+        echo "<li>{$row['username']} cheered {$row['cheer_amount']} bits - {$row['timestamp']}</li>";
+      }
+    ?>
+  </ul>
+</div>
+
+<div class="data-section">
+  <h2>Recent Raids</h2>
+  <ul class="custom-list">
+    <?php
+      // Fetch and display recent raid data from the SQLite database
+      while ($row = $raidResults->fetchArray(SQLITE3_ASSOC)) {
+        echo "<li>{$row['raider_name']} - {$row['timestamp']}</li>";
+      }
+    ?>
+  </ul>
+</div>
 </div>
 
 <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
