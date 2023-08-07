@@ -22,6 +22,7 @@ if ($currentHour < 12) {
     $greeting = "Good afternoon";
 }
 
+$webhookURL = '';
 // Fetch the user's data from the database based on the access_token
 $access_token = $_SESSION['access_token'];
 
@@ -35,6 +36,7 @@ $username = $user['username'];
 $twitchDisplayName = $user['twitch_display_name'];
 $twitch_profile_image_url = $user['profile_image'];
 $is_admin = ($user['is_admin'] == 1);
+$webhookURL = $user['webhook_url'];
 
 if (isset($_POST['resetDatabase'])) {
   // Delete the SQLite database file
@@ -144,6 +146,8 @@ $totalViewersFromRaids = 0;
     <script src="https://cdn.yourstreaming.tools/js/about.js"></script>
   	<link rel="icon" href="https://cdn.yourstreaming.tools/img/logo.jpeg">
   	<link rel="apple-touch-icon" href="https://cdn.yourstreaming.tools/img/logo.jpeg">
+    <script src="sendtodiscord.js"></script>
+    <script>var webhookURL = "<?php echo $webhookURL; ?>";</script>
   </head>
 <body>
 <!-- Navigation -->
@@ -256,13 +260,5 @@ $conn->close();
 <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 <script src="https://dhbhdrzi4tiry.cloudfront.net/cdn/sites/foundation.js"></script>
 <script>$(document).foundation();</script>
-<script>
-  // JavaScript function to handle the category filter change
-  document.getElementById("categoryFilter").addEventListener("change", function() {
-    var selectedCategoryId = this.value;
-    // Redirect to the page with the selected category filter
-    window.location.href = "dashboard.php?category=" + selectedCategoryId;
-  });
-</script>
 </body>
 </html>
