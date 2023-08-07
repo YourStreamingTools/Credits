@@ -120,7 +120,7 @@ $raidResults = $conn->query("SELECT raider_name, timestamp FROM raids ORDER BY t
 <br>
 <!-- Display sections for each data type -->
 <div class="data-section">
-  <h2>Recent Followers</h2>
+  <h4>Recent Followers</h4>
   <ul class="custom-list">
     <?php
       // Fetch and display recent followers data from the SQLite database
@@ -132,7 +132,7 @@ $raidResults = $conn->query("SELECT raider_name, timestamp FROM raids ORDER BY t
 </div>
 
 <div class="data-section">
-  <h2>Recent Subscribers</h2>
+  <h4>Recent Subscribers</h4>
   <ul class="custom-list">
     <?php
       // Fetch and display recent subscribers data from the SQLite database
@@ -144,7 +144,7 @@ $raidResults = $conn->query("SELECT raider_name, timestamp FROM raids ORDER BY t
 </div>
 
 <div class="data-section">
-  <h2>Recent Cheers</h2>
+  <h4>Recent Cheers</h4>
   <ul class="custom-list">
     <?php
       // Fetch and display recent cheers data from the SQLite database
@@ -156,7 +156,7 @@ $raidResults = $conn->query("SELECT raider_name, timestamp FROM raids ORDER BY t
 </div>
 
 <div class="data-section">
-  <h2>Recent Raids</h2>
+  <h4>Recent Raids</h4>
   <ul class="custom-list">
     <?php
       // Fetch and display recent raids data from the SQLite database
