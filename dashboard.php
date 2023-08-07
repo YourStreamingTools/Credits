@@ -96,6 +96,7 @@ if (!file_exists($database_name)) {
   $createSubscribersTable = "CREATE TABLE IF NOT EXISTS subscribers (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     subscriber_name TEXT,
+    subscriber_tier INTEGER,
     timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
   )";
 
@@ -123,7 +124,7 @@ if (!file_exists($database_name)) {
 }
 $conn = new SQLite3($database_name);
 $followerResults = $conn->query("SELECT follower_name, timestamp FROM followers ORDER BY timestamp DESC");
-$subscriberResults = $conn->query("SELECT subscriber_name, timestamp FROM subscribers ORDER BY timestamp DESC");
+$subscriberResults = $conn->query("SELECT subscriber_name, subscriber_tier, subscription_months, timestamp FROM subscribers ORDER BY timestamp DESC");
 $cheerResults = $conn->query("SELECT username, cheer_amount, timestamp FROM cheers ORDER BY timestamp DESC");
 $raidResults = $conn->query("SELECT raider_name, timestamp FROM raids ORDER BY timestamp DESC");
 $totalRaidersToday = 0;
@@ -180,39 +181,59 @@ $totalViewersFromRaids = 0;
     ?>
   </ul>
 </div>
-
-<div class="data-section">
-  <h4>Recent Subscribers</h4>
-  <ul class="custom-list">
-    <?php
-      // Fetch and display recent subscribers data from the SQLite database
-      while ($row = $subscriberResults->fetchArray(SQLITE3_ASSOC)) {
-        echo "<li>{$row['subscriber_name']} - {$row['timestamp']}</li>";
-      }
-    ?>
-  </ul>
-</div>
-
-<div class="data-section">
-  <h4>Recent Cheers</h4>
-  <ul class="custom-list">
-    <?php
-      // Fetch and display recent cheers data from the SQLite database
-      while ($row = $cheerResults->fetchArray(SQLITE3_ASSOC)) {
-        echo "<li>{$row['username']} cheered {$row['cheer_amount']} bits - {$row['timestamp']}</li>";
-      }
-    ?>
-  </ul>
-</div>
 <?php
+// Fetch and display recent subscribers data from the SQLite database
 echo "<div class='data-section'>";
-echo "<h4>Recent Raids | Total Raiders: $totalRaidersToday ($totalViewersFromRaids)</h4>";
-echo "<ul class='custom-list'>";
-  // Fetch and display recent raid data from the SQLite database
-  while ($row = $raidResults->fetchArray(SQLITE3_ASSOC)) {
-    echo "<li>{$row['raider_name']} - Viewers: {$row['viewers']} - {$row['timestamp']}</li>";
-  }
-echo "</ul>";
+echo "<h4>Recent Subscribers</h4>";
+echo "<table class='custom-table'>";
+echo "<tr><th>Subscriber Name</th>";
+echo "<th>Tier</th>";
+echo "<th>Months</th>";
+echo "<th>Timestamp</th></tr>";
+
+while ($row = $subscriberResults->fetchArray(SQLITE3_ASSOC)) {
+  $tier = ($row['subscriber_name'] === 'Tier 1') ? '1' : (($row['subscriber_name'] === 'Tier 2') ? '2' : '3');
+  $months = getMonthsFromTimestamp($row['timestamp']);
+  
+  echo "<tr><td>{$row['subscriber_name']}</td>";
+  echo "<td>{$tier}</td>";
+  echo "<td>{$months}</td>";
+  echo "<td>{$row['timestamp']}</td></tr>";
+}
+echo "</table>";
+echo "</div>";
+
+// Fetch and display recent cheers data from the SQLite database
+echo "<div class='data-section'>";
+echo "<h4>Recent Cheers</h4>";
+echo "<table class='custom-table'>";
+echo "<tr><th>Username</th>";
+echo "<th>Cheer Amount</th>";
+echo "<th>Timestamp</th></tr>";
+
+while ($row = $cheerResults->fetchArray(SQLITE3_ASSOC)) {
+  echo "<tr><td>{$row['username']}</td>";
+  echo "<td>{$row['cheer_amount']} bits</td>";
+  echo "<td>{$row['timestamp']}</td></tr>";
+}
+echo "</table>";
+echo "</div>";
+
+// Fetch and display recent raid data from the SQLite database
+echo "<div class='data-section'>";
+echo "<h4>Recent Raids</h4>";
+echo "<table class='custom-table'>";
+echo "<tr><th>Raider</th>";
+echo "<th>Viewers</th></tr>";
+
+while ($row = $raidResults->fetchArray(SQLITE3_ASSOC)) {
+  echo "<tr><td>{$row['raider_name']}</td>";
+  echo "<td>Viewers: {$row['viewers']}</td></tr>";
+}
+echo "<tr><td>Total ($totalRaidersToday)</td>";
+echo "<td>$totalViewersFromRaids</td></tr>";
+
+echo "</table>";
 echo "</div>";
 ?>
 </div>
