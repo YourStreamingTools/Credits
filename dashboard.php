@@ -127,13 +127,33 @@ if (!file_exists($database_name)) {
 
   $conn->close();
 }
+$totalRaidersToday = 0;
+$totalViewersFromRaids = 0;
 $conn = new SQLite3($database_name);
 $followerResults = $conn->query("SELECT follower_name, timestamp FROM followers ORDER BY timestamp DESC");
 $subscriberResults = $conn->query("SELECT subscriber_name, subscriber_tier, subscription_months, timestamp FROM subscribers ORDER BY timestamp DESC");
 $cheerResults = $conn->query("SELECT username, cheer_amount, timestamp FROM cheers ORDER BY timestamp DESC");
 $raidResults = $conn->query("SELECT raider_name, timestamp FROM raids ORDER BY timestamp DESC");
-$totalRaidersToday = 0;
-$totalViewersFromRaids = 0;
+
+$followerData = array();
+while ($row = $followerResults->fetchArray(SQLITE3_ASSOC)) {
+  $followerData[] = $row;
+}
+
+$subscriberData = array();
+while ($row = $subscriberResults->fetchArray(SQLITE3_ASSOC)) {
+  $subscriberData[] = $row;
+}
+
+$cheerData = array();
+while ($row = $cheerResults->fetchArray(SQLITE3_ASSOC)) {
+  $cheerData[] = $row;
+}
+
+$raidData = array();
+while ($row = $raidResults->fetchArray(SQLITE3_ASSOC)) {
+  $raidData[] = $row;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -181,7 +201,7 @@ $totalViewersFromRaids = 0;
 // Fetch and display recent followers data from the SQLite database
 echo "<div class='data-section'>";
 echo "<h4>Recent Followers";
-echo "<button class='button float-right' onclick='sendToDiscord(\"followers\")'>Send to Discord</button></h4>";
+echo "<button class='button float-right' onclick='sendToDiscord(\"followers\", this.id)'>Send to Discord</button></h4>";
 echo "<table class='custom-table'>";
 echo "<tr><th>Follower</th>";
 echo "<th>Timestamp</th></tr>";
