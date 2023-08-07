@@ -177,6 +177,7 @@ $totalViewersFromRaids = 0;
 // Fetch and display recent followers data from the SQLite database
 echo "<div class='data-section'>";
 echo "<h4>Recent Followers</h4>";
+echo "<button class='button' onclick='sendToDiscord(\"followers\")'>Send to Discord</button>";
 echo "<table class='custom-table'>";
 echo "<tr><th>Follower</th>";
 echo "<th>Timestamp</th></tr>";
@@ -192,6 +193,7 @@ echo "</div>";
 // Fetch and display recent subscribers data from the SQLite database
 echo "<div class='data-section'>";
 echo "<h4>Recent Subscribers</h4>";
+echo "<button class='button' onclick='sendToDiscord(\"subscribers\")'>Send to Discord</button>";
 echo "<table class='custom-table'>";
 echo "<tr><th>Subscriber Name</th>";
 echo "<th>Tier</th>";
@@ -214,6 +216,7 @@ echo "</div>";
 // Fetch and display recent cheers data from the SQLite database
 echo "<div class='data-section'>";
 echo "<h4>Recent Cheers</h4>";
+echo "<button class='button' onclick='sendToDiscord(\"cheers\")'>Send to Discord</button>";
 echo "<table class='custom-table'>";
 echo "<tr><th>Username</th>";
 echo "<th>Cheer Amount</th>";
@@ -230,6 +233,7 @@ echo "</div>";
 // Fetch and display recent raid data from the SQLite database
 echo "<div class='data-section'>";
 echo "<h4>Recent Raids</h4>";
+echo "<button class='button' onclick='sendToDiscord(\"raids\")'>Send to Discord</button>";
 echo "<table class='custom-table'>";
 echo "<tr><th>Raider</th>";
 echo "<th>Viewers</th></tr>";
