@@ -81,12 +81,12 @@ $conn->close();
 <br>
 <h1><?php echo "$greeting, <img id='profile-image' src='$twitch_profile_image_url' width='50px' height='50px' alt='$twitchDisplayName Profile Image'>$twitchDisplayName!"; ?></h1>
 <br>
-<!-- Add sections to display fetched data using custom styling -->
+<!-- Display sections for each data type -->
 <div class="data-section">
   <h2>Recent Followers</h2>
   <ul class="custom-list">
     <?php
-      // Fetch and display recent follower data from the SQLite database
+      // Fetch and display recent followers data from the SQLite database
       while ($row = $followerResults->fetchArray(SQLITE3_ASSOC)) {
         echo "<li>{$row['follower_name']} - {$row['timestamp']}</li>";
       }
@@ -98,7 +98,7 @@ $conn->close();
   <h2>Recent Subscribers</h2>
   <ul class="custom-list">
     <?php
-      // Fetch and display recent subscriber data from the SQLite database
+      // Fetch and display recent subscribers data from the SQLite database
       while ($row = $subscriberResults->fetchArray(SQLITE3_ASSOC)) {
         echo "<li>{$row['subscriber_name']} - {$row['timestamp']}</li>";
       }
@@ -122,12 +122,13 @@ $conn->close();
   <h2>Recent Raids</h2>
   <ul class="custom-list">
     <?php
-      // Fetch and display recent raid data from the SQLite database
+      // Fetch and display recent raids data from the SQLite database
       while ($row = $raidResults->fetchArray(SQLITE3_ASSOC)) {
         echo "<li>{$row['raider_name']} - {$row['timestamp']}</li>";
       }
     ?>
   </ul>
+</div>
 </div>
 </div>
 
