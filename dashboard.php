@@ -55,6 +55,8 @@ if (isset($_POST['resetDatabase'])) {
   $createSubscribersTable = "CREATE TABLE IF NOT EXISTS subscribers (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     subscriber_name TEXT,
+    subscriber_tier INTEGER,
+    subscription_months INTEGER,
     timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
   )";
 
@@ -97,6 +99,7 @@ if (!file_exists($database_name)) {
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     subscriber_name TEXT,
     subscriber_tier INTEGER,
+    subscription_months INTEGER,
     timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
   )";
 
