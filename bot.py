@@ -54,4 +54,13 @@ while True:
             cursor.execute("INSERT INTO cheers (username, cheer_amount) VALUES (?, ?)", (username, cheer_amount))
             conn.commit()
 
+    # Check for new raid notifications
+    elif "PRIVMSG" in data and "Raiders" in data:
+        raid_match = re.search(r":(\w+)!\w+@\w+\.tmi\.twitch\.tv PRIVMSG #\w+ :We're raiding with a party of (\d+)", data)
+        if raid_match:
+            raider_name = raid_match.group(1)
+            viewers = int(raid_match.group(2))
+            cursor.execute("INSERT INTO raids (raider_name, viewers) VALUES (?, ?)", (raider_name, viewers))
+            conn.commit()
+
     time.sleep(1)
