@@ -33,7 +33,7 @@ while True:
     current_time = int(time.time())  # Get current UNIX timestamp
 
     # Check for new follower notifications
-    elif "PRIVMSG" not in data and "NOTICE" in data and f"#{CHANNEL_NAME}" in data:
+    if "PRIVMSG" not in data and "NOTICE" in data and f"#{CHANNEL_NAME}" in data:
         follower_match = re.search(r":(\w+)!\w+@\w+\.tmi\.twitch\.tv PRIVMSG #\w+ :(.+) has just followed!", data)
         if follower_match:
             follower_name = follower_match.group(1)
@@ -41,7 +41,7 @@ while True:
             conn.commit()
 
     # Check for new subscriber notifications
-    elif "USERNOTICE" in data and f"#{CHANNEL_NAME}" in data:
+    if "USERNOTICE" in data and f"#{CHANNEL_NAME}" in data:
         subscriber_match = re.search(r"msg-id=subscriber [^ ]+ :(\w+) (\d+) (\d+)", data)
         if subscriber_match:
             subscriber_name = subscriber_match.group(1)
@@ -51,7 +51,7 @@ while True:
             conn.commit()
 
     # Check for new cheer notifications
-    elif "PRIVMSG" in data and "bits" in data:
+    if "PRIVMSG" in data and "bits" in data:
         cheer_match = re.search(r":(\w+)!\w+@\w+\.tmi\.twitch\.tv PRIVMSG #\w+ :Cheers (\d+)", data)
         if cheer_match:
             username = cheer_match.group(1)
@@ -60,7 +60,7 @@ while True:
             conn.commit()
 
     # Check for new raid notifications
-    elif "PRIVMSG" in data and "Raiders" in data:
+    if "PRIVMSG" in data and "Raiders" in data:
         raid_match = re.search(r":(\w+)!\w+@\w+\.tmi\.twitch\.tv PRIVMSG #\w+ :We're raiding with a party of (\d+)", data)
         if raid_match:
             raider_name = raid_match.group(1)
