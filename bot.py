@@ -45,4 +45,13 @@ while True:
             cursor.execute("INSERT INTO subscribers (subscriber_name) VALUES (?)", (subscriber_name,))
             conn.commit()
 
+    # Check for new cheer notifications
+    elif "PRIVMSG" in data and "bits" in data:
+        cheer_match = re.search(r":(\w+)!\w+@\w+\.tmi\.twitch\.tv PRIVMSG #\w+ :Cheers (\d+)", data)
+        if cheer_match:
+            username = cheer_match.group(1)
+            cheer_amount = int(cheer_match.group(2))
+            cursor.execute("INSERT INTO cheers (username, cheer_amount) VALUES (?, ?)", (username, cheer_amount))
+            conn.commit()
+
     time.sleep(1)
