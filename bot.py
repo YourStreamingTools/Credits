@@ -2,11 +2,17 @@ import socket
 import sqlite3
 import re
 import time
+import argparse
+
+# Parse command-line arguments
+parser = argparse.ArgumentParser(description="Twitch Chat Bot")
+parser.add_argument("-channel", dest="target_channel", required=True, help="Target Twitch channel name")
+args = parser.parse_args()
 
 # Twitch bot settings
 BOT_USERNAME = "your_bot_username"
-CHANNEL_NAME = "target_channel"
 OAUTH_TOKEN = "your_oauth_token"  # Generate from Twitch Developer Dashboard
+CHANNEL_NAME = args.target_channel
 
 # Connect to IRC server
 server = "irc.twitch.tv"
