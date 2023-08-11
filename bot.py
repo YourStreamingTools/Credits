@@ -1,6 +1,7 @@
 import socket
 import sqlite3
 import re
+import time
 
 # Twitch bot settings
 BOT_USERNAME = "your_bot_username"
@@ -29,12 +30,14 @@ while True:
     if data.startswith("PING"):
         irc.send("PONG\n".encode("utf-8"))
 
+    current_time = int(time.time())  # Get current UNIX timestamp
+
     # Check for new follower notifications
     elif "PRIVMSG" not in data and "NOTICE" in data and f"#{CHANNEL_NAME}" in data:
         follower_match = re.search(r":(\w+)!\w+@\w+\.tmi\.twitch\.tv PRIVMSG #\w+ :(.+) has just followed!", data)
         if follower_match:
             follower_name = follower_match.group(1)
-            cursor.execute("INSERT INTO followers (follower_name) VALUES (?)", (follower_name,))
+            cursor.execute("INSERT INTO followers (follower_name, timestamp) VALUES (?, ?)", (follower_name, current_time))
             conn.commit()
 
     # Check for new subscriber notifications
@@ -42,7 +45,7 @@ while True:
         subscriber_match = re.search(r"msg-id=subscriber [^ ]+ :(\w+)", data)
         if subscriber_match:
             subscriber_name = subscriber_match.group(1)
-            cursor.execute("INSERT INTO subscribers (subscriber_name) VALUES (?)", (subscriber_name,))
+            cursor.execute("INSERT INTO subscribers (subscriber_name, timestamp) VALUES (?, ?)", (subscriber_name, current_time))
             conn.commit()
 
     # Check for new cheer notifications
@@ -51,7 +54,7 @@ while True:
         if cheer_match:
             username = cheer_match.group(1)
             cheer_amount = int(cheer_match.group(2))
-            cursor.execute("INSERT INTO cheers (username, cheer_amount) VALUES (?, ?)", (username, cheer_amount))
+            cursor.execute("INSERT INTO cheers (username, cheer_amount, timestamp) VALUES (?, ?, ?)", (username, cheer_amount, current_time))
             conn.commit()
 
     # Check for new raid notifications
@@ -60,7 +63,7 @@ while True:
         if raid_match:
             raider_name = raid_match.group(1)
             viewers = int(raid_match.group(2))
-            cursor.execute("INSERT INTO raids (raider_name, viewers) VALUES (?, ?)", (raider_name, viewers))
+            cursor.execute("INSERT INTO raids (raider_name, viewers, timestamp) VALUES (?, ?, ?)", (raider_name, viewers, current_time))
             conn.commit()
 
     time.sleep(1)
