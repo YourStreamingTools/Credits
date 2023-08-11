@@ -42,11 +42,12 @@ while True:
 
     # Check for new subscriber notifications
     elif "USERNOTICE" in data and f"#{CHANNEL_NAME}" in data:
-        subscriber_match = re.search(r"msg-id=subscriber [^ ]+ :(\w+) (\d+)", data)
+        subscriber_match = re.search(r"msg-id=subscriber [^ ]+ :(\w+) (\d+) (\d+)", data)
         if subscriber_match:
             subscriber_name = subscriber_match.group(1)
             subscriber_tier = int(subscriber_match.group(2))
-            cursor.execute("INSERT INTO subscribers (subscriber_name, subscriber_tier, timestamp) VALUES (?, ?, ?)", (subscriber_name, subscriber_tier, current_time))
+            subscription_months = int(subscriber_match.group(3))
+            cursor.execute("INSERT INTO subscribers (subscriber_name, subscriber_tier, subscription_months, timestamp) VALUES (?, ?, ?, ?)", (subscriber_name, subscriber_tier, subscription_months, current_time))
             conn.commit()
 
     # Check for new cheer notifications
