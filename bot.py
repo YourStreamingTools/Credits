@@ -1,5 +1,6 @@
 import socket
 import sqlite3
+import re
 
 # Twitch bot settings
 BOT_USERNAME = "your_bot_username"
@@ -34,6 +35,14 @@ while True:
         if follower_match:
             follower_name = follower_match.group(1)
             cursor.execute("INSERT INTO followers (follower_name) VALUES (?)", (follower_name,))
+            conn.commit()
+
+    # Check for new subscriber notifications
+    elif "USERNOTICE" in data and f"#{CHANNEL_NAME}" in data:
+        subscriber_match = re.search(r"msg-id=subscriber [^ ]+ :(\w+)", data)
+        if subscriber_match:
+            subscriber_name = subscriber_match.group(1)
+            cursor.execute("INSERT INTO subscribers (subscriber_name) VALUES (?)", (subscriber_name,))
             conn.commit()
 
     time.sleep(1)
