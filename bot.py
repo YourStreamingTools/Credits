@@ -3,16 +3,19 @@ import sqlite3
 import re
 import time
 import argparse
+import requests
 
 # Parse command-line arguments
 parser = argparse.ArgumentParser(description="Twitch Chat Bot")
 parser.add_argument("-channel", dest="target_channel", required=True, help="Target Twitch channel name")
+parser.add_argument("-channelid", dest="twitch_user_id", required=True, help="Twitch user ID")
 args = parser.parse_args()
 
 # Twitch bot settings
 BOT_USERNAME = ""  # CHANGE TO MAKE THIS WORK
 OAUTH_TOKEN = "" # CHANGE TO MAKE THIS WORK
 CHANNEL_NAME = args.target_channel
+YOUR_CHANNEL_ID = args.twitch_user_id
 
 # Connect to IRC server
 server = "irc.twitch.tv"
@@ -38,45 +41,48 @@ while True:
 
     current_time = int(time.time())  # Get current UNIX timestamp
 
-    # Check for new follower notifications
-    if "PRIVMSG" not in data and "NOTICE" in data and f"#{CHANNEL_NAME}" in data:
-        follower_match = re.search(r":(\w+)!\w+@\w+\.tmi\.twitch\.tv PRIVMSG #\w+ :(.+) has just followed!", data)
-        if follower_match:
-            follower_name = follower_match.group(1)
-            print("Follower detected:", follower_name)  # Debug message
-            try:
-                cursor.execute("INSERT INTO followers (follower_name, timestamp) VALUES (?, ?)", (follower_name, current_time))
-                conn.commit()
-                print("Follower data inserted into database.")  # Debug message
-            except Exception as e:
-                print("Error inserting follower data:", str(e))  # Debug message
+    # Your API request to get follower information
+    follower_api_url = f"https://api.twitch.tv/helix/users/follows?to_id={YOUR_CHANNEL_ID}"
+    headers = {
+        'Client-ID': 'your_client_id',
+        'Authorization': 'Bearer your_bot_oauth_token'
+    }
+    follower_response = requests.get(follower_api_url, headers=headers)
+    follower_data = follower_response.json()  # Parse JSON response
+    for follower in follower_data.get("data", []):
+        follower_name = follower["from_name"]
+        cursor.execute("INSERT INTO followers (follower_name, timestamp) VALUES (?, ?)", (follower_name, current_time))
+        conn.commit()
 
-    # Check for new subscriber notifications
-    if "USERNOTICE" in data and f"#{CHANNEL_NAME}" in data:
-        subscriber_match = re.search(r"msg-id=subscriber [^ ]+ :(\w+) (\d+) (\d+)", data)
-        if subscriber_match:
-            subscriber_name = subscriber_match.group(1)
-            subscriber_tier = int(subscriber_match.group(2))
-            subscription_months = int(subscriber_match.group(3))
-            cursor.execute("INSERT INTO subscribers (subscriber_name, subscriber_tier, subscription_months, timestamp) VALUES (?, ?, ?, ?)", (subscriber_name, subscriber_tier, subscription_months, current_time))
-            conn.commit()
+    # Your API request to get subscriber information
+    subscriber_api_url = f"https://api.twitch.tv/helix/subscriptions?broadcaster_id={YOUR_CHANNEL_ID}"
+    subscriber_response = requests.get(subscriber_api_url, headers=headers)
+    subscriber_data = subscriber_response.json()  # Parse JSON response
+    for subscriber in subscriber_data.get("data", []):
+        subscriber_name = subscriber["user_name"]
+        subscriber_tier = int(subscriber["tier"])
+        subscription_months = int(subscriber["cumulative_months"])
+        cursor.execute("INSERT INTO subscribers (subscriber_name, subscriber_tier, subscription_months, timestamp) VALUES (?, ?, ?, ?)", (subscriber_name, subscriber_tier, subscription_months, current_time))
+        conn.commit()
 
-    # Check for new cheer notifications
-    if "PRIVMSG" in data and "bits" in data:
-        cheer_match = re.search(r":(\w+)!\w+@\w+\.tmi\.twitch\.tv PRIVMSG #\w+ :Cheers (\d+)", data)
-        if cheer_match:
-            username = cheer_match.group(1)
-            cheer_amount = int(cheer_match.group(2))
-            cursor.execute("INSERT INTO cheers (username, cheer_amount, timestamp) VALUES (?, ?, ?)", (username, cheer_amount, current_time))
-            conn.commit()
+    # Your API request to get cheer information
+    cheer_api_url = f"https://api.twitch.tv/helix/bits/leaderboard?user_id={YOUR_CHANNEL_ID}"
+    cheer_response = requests.get(cheer_api_url, headers=headers)
+    cheer_data = cheer_response.json()  # Parse JSON response
+    for cheer in cheer_data.get("data", []):
+        username = cheer["user_name"]
+        cheer_amount = int(cheer["score"])
+        cursor.execute("INSERT INTO cheers (username, cheer_amount, timestamp) VALUES (?, ?, ?)", (username, cheer_amount, current_time))
+        conn.commit()
 
-    # Check for new raid notifications
-    if "PRIVMSG" in data and "Raiders" in data:
-        raid_match = re.search(r":(\w+)!\w+@\w+\.tmi\.twitch\.tv PRIVMSG #\w+ :We're raiding with a party of (\d+)", data)
-        if raid_match:
-            raider_name = raid_match.group(1)
-            viewers = int(raid_match.group(2))
-            cursor.execute("INSERT INTO raids (raider_name, viewers, timestamp) VALUES (?, ?, ?)", (raider_name, viewers, current_time))
-            conn.commit()
+    # Your API request to get raid information
+    raid_api_url = f"https://api.twitch.tv/helix/channels/raids?broadcaster_id={YOUR_CHANNEL_ID}"
+    raid_response = requests.get(raid_api_url, headers=headers)
+    raid_data = raid_response.json()  # Parse JSON response
+    for raid in raid_data.get("data", []):
+        raider_name = raid["from_name"]
+        viewers = int(raid["viewer_count"])
+        cursor.execute("INSERT INTO raids (raider_name, viewers, timestamp) VALUES (?, ?, ?)", (raider_name, viewers, current_time))
+        conn.commit()
 
 time.sleep(1)
