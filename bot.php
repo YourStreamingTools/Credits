@@ -41,26 +41,7 @@ if (isset($_POST['runBot'])) {
     $channelName = $username;
 
     // Execute the Python script with the channel name as an argument
-    $output = shell_exec("python bot.py -channel $channelName 2>&1");
-
-    if (strpos($output, "Expected expressionPylance") !== false) {
-        $botStatus = "Bot running";
-    } else {
-        $botStatus = "Bot not running";
-    }
-}
-
-if (isset($_POST['checkBot'])) {
-    $channelName = $username;
-
-    // Execute the Python script with the channel name as an argument and capture the output
-    $output = shell_exec("python bot.py -channel $channelName 2>&1");
-
-    if (strpos($output, "Expected expressionPylance") !== false) {
-        $botStatus = "Bot running";
-    } else {
-        $botStatus = "Bot not running";
-    }
+    $output = shell_exec("python bot.py -channel $channelName > /dev/null 2>&1 &");
 }
 ?>
 <!DOCTYPE html>
@@ -85,7 +66,8 @@ if (isset($_POST['checkBot'])) {
   <div class="top-bar-left">
     <ul class="dropdown vertical medium-horizontal menu" data-responsive-menu="drilldown medium-dropdown hinge-in-from-top hinge-out-from-top">
       <li class="menu-text">YourStreamingTools</li>
-      <li class="is-active"><a href="dashboard.php">Dashboard</a></li>
+      <li><a href="index.php">Dashboard</a></li>
+      <li class="is-active"><a href="bot.php">Bot</a></li>
     </ul>
   </div>
   <div class="top-bar-right">
@@ -101,16 +83,8 @@ if (isset($_POST['checkBot'])) {
 <h1><?php echo "$greeting, <img id='profile-image' src='$twitch_profile_image_url' width='50px' height='50px' alt='$twitchDisplayName Profile Image'>$twitchDisplayName!"; ?></h1>
 <br>
 <form action="" method="post">
-    <button type="submit" name="runBot">Run Bot</button>
+    <button class="defult-button" type="submit" name="runBot">Run Bot</button>
 </form>
-<form action="" method="post">
-    <button type="submit" name="checkBot">Check Bot Status</button>
-</form>
-<?php
-if (isset($botStatus)) {
-    echo "<p>Bot Status: $botStatus</p>";
-}
-?>
 </div>
 </div>
 
