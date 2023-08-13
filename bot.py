@@ -9,6 +9,7 @@ import requests
 parser = argparse.ArgumentParser(description="Twitch Chat Bot")
 parser.add_argument("-channel", dest="target_channel", required=True, help="Target Twitch channel name")
 parser.add_argument("-channelid", dest="CHANNEL_ID", required=True, help="Twitch user ID")
+parser.add_argument("-token", dest="bot_token", required=True, help="Bot Token for authentication")
 args = parser.parse_args()
 
 # Twitch bot settings
@@ -45,7 +46,7 @@ while True:
     follower_api_url = f"https://api.twitch.tv/helix/users/follows?to_id={CHANNEL_ID}"
     headers = {
         'Client-ID': '',  # CHANGE TO MAKE THIS WORK
-        'Authorization': 'Bearer BOT_TOKEN' # CHANGE BOT_TOKEN TO MAKE THIS WORK
+        'Authorization': 'Bearer {args.bot_token}'
     }
     follower_response = requests.get(follower_api_url, headers=headers)
     cursor.execute("INSERT INTO followers (follower_name, timestamp) VALUES (?, ?)", (follower_name, current_time))
@@ -54,7 +55,7 @@ while True:
     subscriber_api_url = f"https://api.twitch.tv/helix/subscriptions?broadcaster_id={CHANNEL_ID}"
     headers = {
         'Client-ID': '',  # CHANGE TO MAKE THIS WORK
-        'Authorization': 'Bearer BOT_TOKEN' # CHANGE BOT_TOKEN TO MAKE THIS WORK
+        'Authorization': 'Bearer {args.bot_token}'
     }
     subscriber_response = requests.get(subscriber_api_url, headers=headers)
     cursor.execute("INSERT INTO subscribers (subscriber_name, subscriber_tier, subscription_months, timestamp) VALUES (?, ?, ?, ?)", (subscriber_name, subscriber_tier, subscription_months, current_time))
@@ -63,7 +64,7 @@ while True:
     cheer_api_url = f"https://api.twitch.tv/helix/bits/leaderboard?user_id={CHANNEL_ID}"
     headers = {
         'Client-ID': '',  # CHANGE TO MAKE THIS WORK
-        'Authorization': 'Bearer BOT_TOKEN' # CHANGE BOT_TOKEN TO MAKE THIS WORK
+        'Authorization': 'Bearer {args.bot_token}'
     }
     cheer_response = requests.get(cheer_api_url, headers=headers)
     cursor.execute("INSERT INTO cheers (username, cheer_amount, timestamp) VALUES (?, ?, ?)", (username, cheer_amount, current_time))
@@ -72,7 +73,7 @@ while True:
     raid_api_url = f"https://api.twitch.tv/helix/channels/raids?broadcaster_id={CHANNEL_ID}"
     headers = {
         'Client-ID': '',  # CHANGE TO MAKE THIS WORK
-        'Authorization': 'Bearer BOT_TOKEN' # CHANGE BOT_TOKEN TO MAKE THIS WORK
+        'Authorization': 'Bearer {args.bot_token}'
     }
     raid_response = requests.get(raid_api_url, headers=headers)
     cursor.execute("INSERT INTO raids (raider_name, viewers, timestamp) VALUES (?, ?, ?)", (raider_name, viewers, current_time))
