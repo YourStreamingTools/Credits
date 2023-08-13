@@ -8,7 +8,7 @@ import requests
 # Parse command-line arguments
 parser = argparse.ArgumentParser(description="Twitch Chat Bot")
 parser.add_argument("-channel", dest="target_channel", required=True, help="Target Twitch channel name")
-parser.add_argument("-channelid", dest="CHANNEL_ID", required=True, help="Twitch user ID")
+parser.add_argument("-channelid", dest="channel_id", required=True, help="Twitch user ID")
 parser.add_argument("-token", dest="bot_token", required=True, help="Bot Token for authentication")
 args = parser.parse_args()
 
@@ -16,7 +16,7 @@ args = parser.parse_args()
 BOT_USERNAME = ""  # CHANGE TO MAKE THIS WORK
 OAUTH_TOKEN = "" # CHANGE TO MAKE THIS WORK
 CHANNEL_NAME = args.target_channel
-CHANNEL_ID = args.twitch_user_id
+CHANNEL_ID = args.channel_id
 
 # Connect to IRC server
 server = "irc.twitch.tv"
