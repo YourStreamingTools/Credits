@@ -44,24 +44,36 @@ while True:
     # Your API request to get follower information
     follower_api_url = f"https://api.twitch.tv/helix/users/follows?to_id={CHANNEL_ID}"
     headers = {
-        'Client-ID': 'your_client_id',
-        'Authorization': 'Bearer your_bot_oauth_token'
+        'Client-ID': '',  # CHANGE TO MAKE THIS WORK
+        'Authorization': 'Bearer BOT_TOKEN' # CHANGE BOT_TOKEN TO MAKE THIS WORK
     }
     follower_response = requests.get(follower_api_url, headers=headers)
     cursor.execute("INSERT INTO followers (follower_name, timestamp) VALUES (?, ?)", (follower_name, current_time))
-    
+
     # Your API request to get subscriber information
     subscriber_api_url = f"https://api.twitch.tv/helix/subscriptions?broadcaster_id={CHANNEL_ID}"
+    headers = {
+        'Client-ID': '',  # CHANGE TO MAKE THIS WORK
+        'Authorization': 'Bearer BOT_TOKEN' # CHANGE BOT_TOKEN TO MAKE THIS WORK
+    }
     subscriber_response = requests.get(subscriber_api_url, headers=headers)
     cursor.execute("INSERT INTO subscribers (subscriber_name, subscriber_tier, subscription_months, timestamp) VALUES (?, ?, ?, ?)", (subscriber_name, subscriber_tier, subscription_months, current_time))
-    
+
     # Your API request to get cheer information
     cheer_api_url = f"https://api.twitch.tv/helix/bits/leaderboard?user_id={CHANNEL_ID}"
+    headers = {
+        'Client-ID': '',  # CHANGE TO MAKE THIS WORK
+        'Authorization': 'Bearer BOT_TOKEN' # CHANGE BOT_TOKEN TO MAKE THIS WORK
+    }
     cheer_response = requests.get(cheer_api_url, headers=headers)
     cursor.execute("INSERT INTO cheers (username, cheer_amount, timestamp) VALUES (?, ?, ?)", (username, cheer_amount, current_time))
-    
+
     # Your API request to get raid information
     raid_api_url = f"https://api.twitch.tv/helix/channels/raids?broadcaster_id={CHANNEL_ID}"
+    headers = {
+        'Client-ID': '',  # CHANGE TO MAKE THIS WORK
+        'Authorization': 'Bearer BOT_TOKEN' # CHANGE BOT_TOKEN TO MAKE THIS WORK
+    }
     raid_response = requests.get(raid_api_url, headers=headers)
     cursor.execute("INSERT INTO raids (raider_name, viewers, timestamp) VALUES (?, ?, ?)", (raider_name, viewers, current_time))
 
