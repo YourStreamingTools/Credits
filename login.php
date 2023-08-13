@@ -12,7 +12,7 @@ session_start();
 
 // If the user is already logged in, redirect them to the dashboard page
 if (isset($_SESSION['access_token'])) {
-    header('Location: dashboard.php');
+    header('Location: index.php');
     exit;
 }
 
@@ -116,7 +116,7 @@ if (isset($_GET['code'])) {
             mysqli_stmt_close($stmt);
 
             // Redirect the user to the dashboard
-            header('Location: dashboard.php');
+            header('Location: index.php');
             exit;
         } else {
             // Handle the case where the insertion failed
