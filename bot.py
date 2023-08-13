@@ -10,8 +10,8 @@ parser.add_argument("-channel", dest="target_channel", required=True, help="Targ
 args = parser.parse_args()
 
 # Twitch bot settings
-BOT_USERNAME = "your_bot_username"
-OAUTH_TOKEN = "your_oauth_token"  # Generate from Twitch Developer Dashboard
+BOT_USERNAME = ""  # CHANGE TO MAKE THIS WORK
+OAUTH_TOKEN = "" # CHANGE TO MAKE THIS WORK
 CHANNEL_NAME = args.target_channel
 
 # Connect to IRC server
@@ -43,8 +43,13 @@ while True:
         follower_match = re.search(r":(\w+)!\w+@\w+\.tmi\.twitch\.tv PRIVMSG #\w+ :(.+) has just followed!", data)
         if follower_match:
             follower_name = follower_match.group(1)
-            cursor.execute("INSERT INTO followers (follower_name, timestamp) VALUES (?, ?)", (follower_name, current_time))
-            conn.commit()
+            print("Follower detected:", follower_name)  # Debug message
+            try:
+                cursor.execute("INSERT INTO followers (follower_name, timestamp) VALUES (?, ?)", (follower_name, current_time))
+                conn.commit()
+                print("Follower data inserted into database.")  # Debug message
+            except Exception as e:
+                print("Error inserting follower data:", str(e))  # Debug message
 
     # Check for new subscriber notifications
     if "USERNOTICE" in data and f"#{CHANNEL_NAME}" in data:
@@ -74,4 +79,4 @@ while True:
             cursor.execute("INSERT INTO raids (raider_name, viewers, timestamp) VALUES (?, ?, ?)", (raider_name, viewers, current_time))
             conn.commit()
 
-    time.sleep(1)
+time.sleep(1)
