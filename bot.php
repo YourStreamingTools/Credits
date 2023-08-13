@@ -26,22 +26,34 @@ $webhookURL = '';
 // Fetch the user's data from the database based on the access_token
 $access_token = $_SESSION['access_token'];
 
-$stmt = $conn->prepare("SELECT * FROM users WHERE access_token = ?");
-$stmt->bind_param("s", $access_token);
-$stmt->execute();
-$result = $stmt->get_result();
-$user = $result->fetch_assoc();
+$userSTMT = $conn->prepare("SELECT * FROM users WHERE access_token = ?");
+$userSTMT->bind_param("s", $access_token);
+$userSTMT->execute();
+$userResult = $userSTMT->get_result();
+$user = $userResult->fetch_assoc();
 $user_id = $user['id'];
 $username = $user['username'];
 $twitchDisplayName = $user['twitch_display_name'];
 $twitch_profile_image_url = $user['profile_image'];
 $is_admin = ($user['is_admin'] == 1);
 $twitchUserId = $user['twitch_user_id'];
+$userSTMT->close();
+
+$botSTMT = $conn->prepare("SELECT * FROM bot");
+$botSTMT->execute();
+$botResult = $botSTMT->get_result();
+$botData = $botResult->fetch_assoc();
+$botToken = $botData['access_token'];
+$botUsername = $botData['username'];
+$botDisplayName = $botData['display_name'];
+$botUserId = $botData['user_id'];
+$botProfileImageUrl = $botData['profile_image'];
+$botSTMT->close();
 
 if (isset($_POST['runBot'])) {
 
   // Execute the Python script with the channel name as an argument
-  $output = shell_exec("python bot.py -channel $username -channelid $twitchUserId > /dev/null 2>&1 &");
+  $output = shell_exec("python bot.py -channel $username -channelid $twitchUserId -token $botToken > /dev/null 2>&1 &");
 }
 ?>
 <!DOCTYPE html>
@@ -86,6 +98,7 @@ if (isset($_POST['runBot'])) {
 <form action="" method="post">
     <button class="defult-button" type="submit" name="runBot">Run Bot</button>
 </form>
+<?php if ($is_admin) { ?><br><a href="bot-login.php"><button class="defult-button"name="BotLogin">Bot Loin</button></a><?php } ?>
 </div>
 </div>
 
