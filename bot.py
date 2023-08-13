@@ -54,6 +54,7 @@ while True:
     for follower in follower_data.get('data', []):
         follower_name = follower['from_name']
         cursor.execute("INSERT INTO followers (follower_name, timestamp) VALUES (?, ?)", (follower_name, current_time))
+        conn.commit()
 
     # Your API request to get subscriber information
     subscriber_api_url = f"https://api.twitch.tv/helix/subscriptions?broadcaster_id={CHANNEL_ID}"
@@ -70,6 +71,7 @@ while True:
         subscriber_tier = subscriber['tier']
         subscription_months = subscriber['cumulative_months']
         cursor.execute("INSERT INTO subscribers (subscriber_name, subscriber_tier, subscription_months, timestamp) VALUES (?, ?, ?, ?)", (subscriber_name, subscriber_tier, subscription_months, current_time))
+        conn.commit()
 
     # Your API request to get cheer information
     cheer_api_url = f"https://api.twitch.tv/helix/bits/leaderboard?user_id={CHANNEL_ID}"
@@ -85,6 +87,7 @@ while True:
         username = cheer['user_name']
         cheer_amount = cheer['score']
         cursor.execute("INSERT INTO cheers (username, cheer_amount, timestamp) VALUES (?, ?, ?)", (username, cheer_amount, current_time))
+        conn.commit()
 
     # Your API request to get raid information
     raid_api_url = f"https://api.twitch.tv/helix/channels/raids?broadcaster_id={CHANNEL_ID}"
@@ -100,5 +103,6 @@ while True:
         raider_name = raid['from_broadcaster_login']
         viewers = raid['viewers']
         cursor.execute("INSERT INTO raids (raider_name, viewers, timestamp) VALUES (?, ?, ?)", (raider_name, viewers, current_time))
+        conn.commit()
 
 time.sleep(1)
