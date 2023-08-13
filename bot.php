@@ -36,12 +36,12 @@ $username = $user['username'];
 $twitchDisplayName = $user['twitch_display_name'];
 $twitch_profile_image_url = $user['profile_image'];
 $is_admin = ($user['is_admin'] == 1);
+$twitchUserId = $user['twitch_user_id'];
 
 if (isset($_POST['runBot'])) {
-    $channelName = $username;
 
-    // Execute the Python script with the channel name as an argument
-    $output = shell_exec("python bot.py -channel $channelName > /dev/null 2>&1 &");
+  // Execute the Python script with the channel name as an argument
+  $output = shell_exec("python bot.py -channel $username -channelid $twitchUserId > /dev/null 2>&1 &");
 }
 ?>
 <!DOCTYPE html>
@@ -55,6 +55,7 @@ if (isset($_POST['runBot'])) {
     <script src="https://cdn.yourstreaming.tools/js/about.js"></script>
   	<link rel="icon" href="https://cdn.yourstreaming.tools/img/logo.jpeg">
   	<link rel="apple-touch-icon" href="https://cdn.yourstreaming.tools/img/logo.jpeg">
+    <!-- <?php echo "User: $username with User ID: $twitchUserId"; ?> -->
   </head>
 <body>
 <!-- Navigation -->
