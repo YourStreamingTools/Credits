@@ -1,4 +1,3 @@
-<?php ini_set('display_errors', 1); ini_set('display_startup_errors', 1); error_reporting(E_ALL); ?>
 <?php
 // Initialize the session
 session_start();
@@ -185,6 +184,7 @@ while ($row = $raidResults->fetchArray(SQLITE3_ASSOC)) {
       <li class="menu-text">YourStreamingTools</li>
       <li class="is-active"><a href="index.php">Dashboard</a></li>
       <li><a href="bot.php">Bot</a></li>
+      <li><a href="logout.php">Logout</a></li>
     </ul>
   </div>
   <div class="top-bar-right">
