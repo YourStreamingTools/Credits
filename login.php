@@ -3,6 +3,7 @@
 $clientID = ''; // CHANGE TO MAKE THIS WORK
 $redirectURI = ''; // CHANGE TO MAKE THIS WORK
 $clientSecret = ''; // CHANGE TO MAKE THIS WORK
+$IDScope = 'openid moderation:read moderator:read:followers channel:read:vips channel:read:subscriptions moderator:read:chatters bits:read';
 
 // Database credentials
 require_once "db_connect.php";
@@ -22,7 +23,7 @@ if (!isset($_SESSION['access_token']) && !isset($_GET['code'])) {
         '?client_id=' . $clientID .
         '&redirect_uri=' . $redirectURI .
         '&response_type=code' .
-        '&scope=openid');
+        '&scope=' . $IDScope);
     exit;
 }
 
@@ -101,6 +102,9 @@ if (isset($_GET['code'])) {
         $profileImageUrl = $userInfo['data'][0]['profile_image_url'];
         $twitchUserId = $userInfo['data'][0]['id'];
         
+        // Database connect
+        require_once "db_connect.php";
+
         // Insert/update the access token, profile image URL, user ID, and display name in the 'users' table
         $insertQuery = "INSERT INTO users (username, access_token, api_key, profile_image, twitch_user_id, twitch_display_name, is_admin) VALUES ('$twitchUsername', '$accessToken', '" . bin2hex(random_bytes(16)) . "', '$profileImageUrl', '$twitchUserId', '$twitchDisplayName', 0)
                     ON DUPLICATE KEY UPDATE access_token = '$accessToken', profile_image = '$profileImageUrl', twitch_user_id = '$twitchUserId', twitch_display_name = '$twitchDisplayName', last_login = ?";
