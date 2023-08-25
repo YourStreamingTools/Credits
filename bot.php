@@ -81,6 +81,7 @@ if (isset($_POST['runBot'])) {
       <li class="menu-text">YourStreamingTools</li>
       <li><a href="index.php">Dashboard</a></li>
       <li class="is-active"><a href="bot.php">Bot</a></li>
+      <li><a href="logout.php">Logout</a></li>
     </ul>
   </div>
   <div class="top-bar-right">
