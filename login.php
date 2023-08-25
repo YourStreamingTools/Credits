@@ -5,9 +5,6 @@ $redirectURI = ''; // CHANGE TO MAKE THIS WORK
 $clientSecret = ''; // CHANGE TO MAKE THIS WORK
 $IDScope = 'openid moderation:read moderator:read:followers channel:read:vips channel:read:subscriptions moderator:read:chatters bits:read';
 
-// Database credentials
-require_once "db_connect.php";
-
 // Start PHP session
 session_start();
 
