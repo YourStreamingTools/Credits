@@ -9,7 +9,7 @@ import requests
 parser = argparse.ArgumentParser(description="Twitch Chat Bot")
 parser.add_argument("-channel", dest="target_channel", required=True, help="Target Twitch channel name")
 parser.add_argument("-channelid", dest="channel_id", required=True, help="Twitch user ID")
-parser.add_argument("-token", dest="bot_token", required=True, help="Bot Token for authentication")
+parser.add_argument("-token", dest="auth_token", required=True, help="Auth Token for authentication")
 args = parser.parse_args()
 
 # Twitch bot settings
@@ -45,7 +45,7 @@ while True:
     follower_api_url = f"https://api.twitch.tv/helix/users/follows?to_id={CHANNEL_ID}"
     follower_headers = {
         'Client-ID': '', # CHANGE TO MAKE THIS WORK
-        'Authorization': f'Bearer {args.bot_token}'
+        'Authorization': f'Bearer {args.auth_token}'
     }
     follower_response = requests.get(follower_api_url, headers=follower_headers)
     follower_data = follower_response.json()
@@ -60,7 +60,7 @@ while True:
     subscriber_api_url = f"https://api.twitch.tv/helix/subscriptions?broadcaster_id={CHANNEL_ID}"
     subscriber_headers = {
         'Client-ID': '', # CHANGE TO MAKE THIS WORK
-        'Authorization': f'Bearer {args.bot_token}'
+        'Authorization': f'Bearer {args.auth_token}'
     }
     subscriber_response = requests.get(subscriber_api_url, headers=subscriber_headers)
     subscriber_data = subscriber_response.json()
@@ -77,7 +77,7 @@ while True:
     cheer_api_url = f"https://api.twitch.tv/helix/bits/leaderboard?user_id={CHANNEL_ID}"
     cheer_headers = {
         'Client-ID': '', # CHANGE TO MAKE THIS WORK
-        'Authorization': f'Bearer {args.bot_token}'
+        'Authorization': f'Bearer {args.auth_token}'
     }
     cheer_response = requests.get(cheer_api_url, headers=cheer_headers)
     cheer_data = cheer_response.json()
@@ -93,7 +93,7 @@ while True:
     raid_api_url = f"https://api.twitch.tv/helix/channels/raids?broadcaster_id={CHANNEL_ID}"
     raid_headers = {
         'Client-ID': '', # CHANGE TO MAKE THIS WORK
-        'Authorization': f'Bearer {args.bot_token}'
+        'Authorization': f'Bearer {args.auth_token}'
     }
     raid_response = requests.get(raid_api_url, headers=raid_headers)
     raid_data = raid_response.json()
