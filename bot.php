@@ -37,6 +37,7 @@ $twitchDisplayName = $user['twitch_display_name'];
 $twitch_profile_image_url = $user['profile_image'];
 $is_admin = ($user['is_admin'] == 1);
 $twitchUserId = $user['twitch_user_id'];
+$authToken = $access_token;
 $userSTMT->close();
 
 $botSTMT = $conn->prepare("SELECT * FROM bot");
@@ -53,7 +54,7 @@ $botSTMT->close();
 if (isset($_POST['runBot'])) {
 
   // Execute the Python script with the channel name as an argument
-  $output = shell_exec("python bot.py -channel $username -channelid $twitchUserId -token $botToken > /dev/null 2>&1 &");
+  $output = shell_exec("python bot.py -channel $username -channelid $twitchUserId -token $authToken > /dev/null 2>&1 &");
 }
 ?>
 <!DOCTYPE html>
