@@ -50,11 +50,35 @@ $botDisplayName = $botData['display_name'];
 $botUserId = $botData['user_id'];
 $botProfileImageUrl = $botData['profile_image'];
 $botSTMT->close();
+$statusOutput = 'Bot Status: Unkown';
+$pid = '';
 
 if (isset($_POST['runBot'])) {
 
   // Execute the Python script with the channel name as an argument
   $output = shell_exec("python bot.py -channel $username -channelid $twitchUserId -token $authToken > /dev/null 2>&1 &");
+}
+
+if (isset($_POST['botStatus'])) {
+  $statusOutput = shell_exec("python status.py -channel $username");
+  $pid = intval(trim($statusOutput));
+  $_SESSION['bot_pid'] = $pid;
+}
+
+if (isset($_POST['killBot'])) {
+  if (isset($_SESSION['bot_pid'])) {
+    $pid = $_SESSION['bot_pid'];
+    
+    // Kill the process using the retrieved PID
+    $killprocess = shell_exec("kill $pid > /dev/null 2>&1 &");
+    
+    // Remove the stored PID from the session
+    unset($_SESSION['bot_pid']);
+    
+    $statusOutput = "Bot Status: Bot has been stopped.";
+} else {
+    $statusOutput =  "Bot Status: Bot not running";
+}
 }
 ?>
 <!DOCTYPE html>
@@ -68,7 +92,7 @@ if (isset($_POST['runBot'])) {
     <script src="https://cdn.yourstreaming.tools/js/about.js"></script>
   	<link rel="icon" href="https://cdn.yourstreaming.tools/img/logo.jpeg">
   	<link rel="apple-touch-icon" href="https://cdn.yourstreaming.tools/img/logo.jpeg">
-    <!-- <?php echo "User: $username with User ID: $twitchUserId"; ?> -->
+    <!-- <?php echo "User: $username | $twitchUserId | $authToken"; ?> -->
   </head>
 <body>
 <!-- Navigation -->
@@ -97,9 +121,15 @@ if (isset($_POST['runBot'])) {
 <br>
 <h1><?php echo "$greeting, <img id='profile-image' src='$twitch_profile_image_url' width='50px' height='50px' alt='$twitchDisplayName Profile Image'>$twitchDisplayName!"; ?></h1>
 <br>
-<form action="" method="post">
-    <button class="defult-button" type="submit" name="runBot">Run Bot</button>
-</form>
+<h3><?php echo $statusOutput; ?></h3>
+<br>
+<table style="border: none !important;">
+  <tr>
+    <td><form action="" method="post"><button class="defult-button" type="submit" name="runBot">Run Bot</button></form></td>
+    <td><form action="" method="post"><button class="defult-button" type="submit" name="botStatus">Check Bot Status</button></form></td>
+    <td><form action="" method="post"><button class="defult-button" type="submit" name="killBot">Stop Bot</button></form></td>
+  </tr>
+</table>
 <?php if ($is_admin) { ?><br><a href="bot-login.php"><button class="defult-button"name="BotLogin">Bot Loin</button></a><?php } ?>
 </div>
 </div>
