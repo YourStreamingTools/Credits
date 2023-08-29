@@ -57,6 +57,10 @@ if (isset($_POST['runBot'])) {
 
   // Execute the Python script with the channel name as an argument
   $output = shell_exec("python bot.py -channel $username -channelid $twitchUserId -token $authToken > /dev/null 2>&1 &");
+  sleep(5);
+  $statusOutput = shell_exec("python status.py -channel $username");
+  $pid = intval(trim($statusOutput));
+  $_SESSION['bot_pid'] = $pid;
 }
 
 if (isset($_POST['botStatus'])) {
@@ -66,19 +70,12 @@ if (isset($_POST['botStatus'])) {
 }
 
 if (isset($_POST['killBot'])) {
-  if (isset($_SESSION['bot_pid'])) {
-    $pid = $_SESSION['bot_pid'];
-    
-    // Kill the process using the retrieved PID
-    $killprocess = shell_exec("kill $pid > /dev/null 2>&1 &");
-    
-    // Remove the stored PID from the session
-    unset($_SESSION['bot_pid']);
-    
-    $statusOutput = "Bot Status: Bot has been stopped.";
+  $killprocess = shell_exec("kill $pid");
+  unset($_SESSION['bot_pid']);
+  
+  $statusOutput = "Bot Status: Bot has been stopped.";
 } else {
     $statusOutput =  "Bot Status: Bot not running";
-}
 }
 ?>
 <!DOCTYPE html>
