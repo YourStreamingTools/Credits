@@ -13,7 +13,7 @@ channel_username = args.channel_username.lower()  # Convert to lowercase for con
 for process in psutil.process_iter(attrs=['pid', 'name', 'cmdline']):
     process_cmdline = ' '.join(process.info['cmdline']).lower() if process.info['cmdline'] else ""
     if f"python bot.py -channel {channel_username}" in process_cmdline:
-        print(f"Bot is running with process ID:' (PID: {process.info['pid']})")
+        print(f"Bot is running with process ID: {process.info['pid']}")
         break
 else:
     print(f"Bot not running")
