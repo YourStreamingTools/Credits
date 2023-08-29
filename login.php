@@ -3,7 +3,7 @@
 $clientID = ''; // CHANGE TO MAKE THIS WORK
 $redirectURI = ''; // CHANGE TO MAKE THIS WORK
 $clientSecret = ''; // CHANGE TO MAKE THIS WORK
-$IDScope = 'openid moderation:read moderator:read:followers channel:read:vips channel:read:subscriptions moderator:read:chatters bits:read';
+$IDScope = 'openid chat:read moderation:read moderator:read:followers channel:read:vips channel:read:subscriptions moderator:read:chatters bits:read';
 
 // Start PHP session
 session_start();
