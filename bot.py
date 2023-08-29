@@ -35,6 +35,10 @@ database_name = f"{CHANNEL_NAME.lower()}.db"
 conn = sqlite3.connect(database_name)
 cursor = conn.cursor()
 
+# Initialize request count and timestamp
+requests_made = 0
+start_time = time.time()
+
 while True:
     data = irc.recv(2048).decode("utf-8")
 
@@ -134,4 +138,23 @@ while True:
             cursor.execute("INSERT INTO raids (raider_name, viewers, timestamp) VALUES (?, ?, ?)", (raider_name, viewers, current_time))
             conn.commit()
 
-time.sleep(60)
+    # Update request count
+        requests_made += 4
+
+        # Check if the minute has passed since the start
+        elapsed_time = time.time() - start_time
+        if elapsed_time < 60:
+            if requests_made >= 30:
+                # Pause until the next minute begins
+                time.sleep(60 - elapsed_time)
+                # Reset the request count and timestamp
+                requests_made = 0
+                start_time = time.time()
+
+        else:
+            # Reset the request count and timestamp at the start of a new minute
+            requests_made = 0
+            start_time = time.time()
+
+        # Pause for 60 seconds before the next iteration
+        time.sleep(60)
