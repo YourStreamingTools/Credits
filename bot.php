@@ -64,27 +64,25 @@ if (isset($_POST['runBot'])) {
   // Fetch the bot's PID from status.py
   $statusOutput = shell_exec("python status.py -channel $username");
   $pid = intval(trim($statusOutput));
-  $_SESSION['bot_pid'] = $pid;
 }
 
 if (isset($_POST['botStatus'])) {
   $statusOutput = shell_exec("python status.py -channel $username");
-  $pid = intval(trim($statusOutput));
-  $_SESSION['bot_pid'] = $pid;
+  $pid = intval(preg_replace('/\D/', '', $statusOutput));
 }
 
 if (isset($_POST['killBot'])) {
-  if (isset($_SESSION['bot_pid'])) {
-    // Retrieve the bot's PID from the session
-    $pid = $_SESSION['bot_pid'];
-    
+  if (isset($pid)) {
     // Kill the bot's process
-    $killprocess = shell_exec("kill $pid");
+    $killprocess = shell_exec("kill $pid > /dev/null 2>&1 &");
     
+    // Sleep for a few seconds to allow the process to start
+    sleep(3);
+
     // Remove the bot's PID from the session
     unset($_SESSION['bot_pid']);
     
-    $statusOutput = "Bot Status: Bot has been stopped.";
+    $statusOutput = "Bot Status: Stopped.";
   } else {
     $statusOutput = "Bot Status: Bot not running";
   }
@@ -136,7 +134,7 @@ if (isset($_POST['killBot'])) {
   <tr>
     <td><form action="" method="post"><button class="defult-button" type="submit" name="runBot">Run Bot</button></form></td>
     <td><form action="" method="post"><button class="defult-button" type="submit" name="botStatus">Check Bot Status</button></form></td>
-    <td><form action="" method="post"><button class="defult-button" type="submit" name="killBot">Stop Bot</button></form></td>
+    <!--<td><form action="" method="post"><button class="defult-button" type="submit" name="killBot">Stop Bot</button></form></td>-->
   </tr>
 </table>
 <?php if ($is_admin) { ?><br><a href="bot-login.php"><button class="defult-button"name="BotLogin">Bot Loin</button></a><?php } ?>
