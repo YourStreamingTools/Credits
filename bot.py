@@ -29,6 +29,8 @@ irc.connect((server, port))
 irc.send(f"PASS {OAUTH_TOKEN}\n".encode("utf-8"))
 irc.send(f"NICK {BOT_USERNAME}\n".encode("utf-8"))
 irc.send(f"JOIN #{CHANNEL_NAME}\n".encode("utf-8"))
+time.sleep(2)
+irc.send(f"PRIVMSG #{CHANNEL_NAME} :Connected\n".encode("utf-8"))
 
 # SQLite database settings
 database_name = f"{CHANNEL_NAME.lower()}.db"
@@ -48,7 +50,7 @@ while True:
     current_time = int(time.time())  # Get current UNIX timestamp
 
     # Your API request to get follower information
-    follower_api_url = f"https://api.twitch.tv/helix/users/follows?to_id={CHANNEL_ID}&first=10"
+    follower_api_url = f"https://api.twitch.tv/helix/users/follows?to_id={CHANNEL_ID}"
     follower_headers = {
         'Client-ID': CLIENT_ID,
         'Authorization': f'Bearer {args.auth_token}'
@@ -84,12 +86,12 @@ while True:
     for subscriber in subscriber_data.get('data', []):
         subscriber_name = subscriber['user_name']
         subscriber_tier = subscriber['tier']
-        subscription_months = subscriber['cumulative_months']
-        subscriber_timestamp = datetime.strptime(subscriber['created_at'], '%Y-%m-%dT%H:%M:%SZ')
-        subscriber_date = subscriber_timestamp.date()
+        subscription_months = subscriber.get('cumulative_months', 0)
 
-        if subscriber_date == current_date:
-            cursor.execute("INSERT INTO subscribers (subscriber_name, subscriber_tier, subscription_months, timestamp) VALUES (?, ?, ?, ?)", (subscriber_name, subscriber_tier, subscription_months, current_time))
+        subscriber_timestamp = subscriber.get('time')
+        if subscriber_timestamp:
+            subscriber_timestamp = datetime.strptime(subscriber_timestamp, '%Y-%m-%dT%H:%M:%S%z')
+            cursor.execute("INSERT INTO subscribers (subscriber_name, subscriber_tier, subscription_months, timestamp) VALUES (?, ?, ?, ?)", (subscriber_name, subscriber_tier, subscription_months, subscriber_timestamp.timestamp()))
             conn.commit()
 
     # Your API request to get cheer information
