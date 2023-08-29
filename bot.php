@@ -52,12 +52,16 @@ $botProfileImageUrl = $botData['profile_image'];
 $botSTMT->close();
 $statusOutput = 'Bot Status: Unkown';
 $pid = '';
+unset($_SESSION['bot_pid']);
 
 if (isset($_POST['runBot'])) {
-
   // Execute the Python script with the channel name as an argument
   $output = shell_exec("python bot.py -channel $username -channelid $twitchUserId -token $authToken > /dev/null 2>&1 &");
-  sleep(5);
+  
+  // Sleep for a few seconds to allow the process to start
+  sleep(3);
+
+  // Fetch the bot's PID from status.py
   $statusOutput = shell_exec("python status.py -channel $username");
   $pid = intval(trim($statusOutput));
   $_SESSION['bot_pid'] = $pid;
@@ -70,12 +74,20 @@ if (isset($_POST['botStatus'])) {
 }
 
 if (isset($_POST['killBot'])) {
-  $killprocess = shell_exec("kill $pid");
-  unset($_SESSION['bot_pid']);
-  
-  $statusOutput = "Bot Status: Bot has been stopped.";
-} else {
-    $statusOutput =  "Bot Status: Bot not running";
+  if (isset($_SESSION['bot_pid'])) {
+    // Retrieve the bot's PID from the session
+    $pid = $_SESSION['bot_pid'];
+    
+    // Kill the bot's process
+    $killprocess = shell_exec("kill $pid");
+    
+    // Remove the bot's PID from the session
+    unset($_SESSION['bot_pid']);
+    
+    $statusOutput = "Bot Status: Bot has been stopped.";
+  } else {
+    $statusOutput = "Bot Status: Bot not running";
+  }
 }
 ?>
 <!DOCTYPE html>
