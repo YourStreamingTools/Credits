@@ -116,27 +116,27 @@ async def start_bot(ctx):
                 conn.commit()
 
         # Your API request to get raid information
-        raid_api_url = f"https://api.twitch.tv/helix/channels/raids?broadcaster_id={CHANNEL_ID}"
-        raid_headers = {
-            'Client-ID': CLIENT_ID,
-            'Authorization': f'Bearer {args.auth_token}'
-        }
-        raid_response = requests.get(raid_api_url, headers=raid_headers)
-        raid_data = raid_response.json()
+        #raid_api_url = f"https://api.twitch.tv/helix/channels/raids?broadcaster_id={CHANNEL_ID}"
+        #raid_headers = {
+        #    'Client-ID': CLIENT_ID,
+        #    'Authorization': f'Bearer {args.auth_token}'
+        #}
+        #raid_response = requests.get(raid_api_url, headers=raid_headers)
+        #raid_data = raid_response.json()
 
         # Get the current date
-        current_date = datetime.now().date()
+        #current_date = datetime.now().date()
 
         # Extract and insert recent raid information into the database
-        for raid in raid_data.get('data', []):
-            raider_name = raid['from_broadcaster_login']
-            viewers = raid['viewers']
-            raid_timestamp = datetime.strptime(raid['created_at'], '%Y-%m-%dT%H:%M:%SZ')
-            raid_date = raid_timestamp.date()
+        #for raid in raid_data.get('data', []):
+        #    raider_name = raid['from_broadcaster_login']
+        #    viewers = raid['viewers']
+        #    raid_timestamp = datetime.strptime(raid['created_at'], '%Y-%m-%dT%H:%M:%SZ')
+        #    raid_date = raid_timestamp.date()
 
-            if raid_date == current_date:
-                cursor.execute("INSERT INTO raids (raider_name, viewers, timestamp) VALUES (?, ?, ?)", (raider_name, viewers, current_time))
-                conn.commit()
+        #    if raid_date == current_date:
+        #        cursor.execute("INSERT INTO raids (raider_name, viewers, timestamp) VALUES (?, ?, ?)", (raider_name, viewers, current_time))
+        #        conn.commit()
 
         # Update request count
             requests_made += 4
