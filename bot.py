@@ -24,6 +24,8 @@ CHANNEL_ID = args.channel_id
 webroot = "/var/www/html"
 logs_directory = "logs"
 bot_logs = os.path.join(logs_directory, "bot")
+chat_logs = os.path.join(logs_directory, "chat")
+twitch_logs = os.path.join(logs_directory, "twitch")
 
 for directory in [logs_directory, bot_logs]:
     directory_path = os.path.join(webroot, directory)
