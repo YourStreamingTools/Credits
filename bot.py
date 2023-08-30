@@ -4,6 +4,7 @@ import argparse
 import requests
 from datetime import datetime
 from twitchio.ext import commands
+import os
 import logging
 
 # Parse command-line arguments
