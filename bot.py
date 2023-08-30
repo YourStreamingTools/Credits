@@ -4,6 +4,7 @@ import argparse
 import requests
 from datetime import datetime
 from twitchio.ext import commands
+import logging
 
 # Parse command-line arguments
 parser = argparse.ArgumentParser(description="Twitch Chat Bot")
@@ -19,6 +20,15 @@ CLIENT_ID = "" # CHANGE TO MAKE THIS WORK
 CHANNEL_NAME = args.target_channel
 CHANNEL_ID = args.channel_id
 
+# Create a logs directory if it doesn't exist
+log_directory = "logs"
+if not os.path.exists(log_directory):
+    os.makedirs(log_directory)
+
+log_file = os.path.join(log_directory, f"{CHANNEL_NAME}.txt")
+logging.basicConfig(filename=log_file, level=logging.DEBUG,
+                    format="%(asctime)s - %(levelname)s - %(message)s")
+
 # Initialize twitchio bot
 bot = commands.Bot(
     token=OAUTH_TOKEN,
@@ -31,7 +41,7 @@ bot = commands.Bot(
 # Send a message when the bot connects to the channel
 @bot.event
 async def event_ready():
-    print(f"Connected to channel {CHANNEL_NAME}")
+    logging.info(f"Connected to channel {CHANNEL_NAME}")
     await bot.send_message(CHANNEL_NAME, "Connected")
 
 # SQLite database settings
