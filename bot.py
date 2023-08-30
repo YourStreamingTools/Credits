@@ -20,12 +20,17 @@ CLIENT_ID = "" # CHANGE TO MAKE THIS WORK
 CHANNEL_NAME = args.target_channel
 CHANNEL_ID = args.channel_id
 
-# Create a logs directory if it doesn't exist
-log_directory = "logs"
-if not os.path.exists(log_directory):
-    os.makedirs(log_directory)
+# Logs
+webroot = "/var/www/html"
+logs_directory = "logs"
+bot_logs = os.path.join(logs_directory, "bot")
 
-log_file = os.path.join(log_directory, f"{CHANNEL_NAME}.txt")
+for directory in [logs_directory, bot_logs]:
+    directory_path = os.path.join(webroot, directory)
+    if not os.path.exists(directory_path):
+        os.makedirs(directory_path)
+
+log_file = os.path.join(webroot, bot_logs, f"{CHANNEL_NAME}.txt")
 logging.basicConfig(filename=log_file, level=logging.DEBUG,
                     format="%(asctime)s - %(levelname)s - %(message)s")
 
