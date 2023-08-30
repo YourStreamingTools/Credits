@@ -43,8 +43,6 @@ cursor = conn.cursor()
 @bot.command(name='startbot')
 async def start_bot(ctx):
     while True:
-        data = irc.recv(2048).decode("utf-8")
-
         current_time = int(time.time())  # Get current UNIX timestamp
 
         # Your API request to get follower information
