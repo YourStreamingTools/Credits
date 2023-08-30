@@ -21,7 +21,7 @@ CHANNEL_ID = args.channel_id
 
 # Initialize twitchio bot
 bot = commands.Bot(
-    irc_token=OAUTH_TOKEN,
+    token=OAUTH_TOKEN,
     client_id=CLIENT_ID,
     nick=BOT_USERNAME,
     prefix='$',
