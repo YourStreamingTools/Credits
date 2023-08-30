@@ -42,6 +42,8 @@ cursor = conn.cursor()
 # Command to start updating the database
 @bot.command(name='startbot')
 async def start_bot(ctx):
+    requests_made = 0  # Initialize requests_made
+    start_time = time.time()  # Initialize start_time
     while True:
         current_time = int(time.time())  # Get current UNIX timestamp
 
