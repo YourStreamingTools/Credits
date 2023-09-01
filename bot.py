@@ -3,6 +3,7 @@ import time
 import argparse
 import requests
 from datetime import datetime
+import twitchio
 from twitchio.ext import commands
 import os
 import logging
@@ -45,9 +46,6 @@ class Bot(commands.Bot):
     async def event_ready(self):
         logging.info(f'Logged in as | {self.nick}')
         logging.info(f'User id is | {self.user_id}')
-        
-        ctx = await self.get_context(self.get_channel(CHANNEL_NAME))
-        await ctx.send(f'Connected!')
 
     @commands.command()
     async def start_bot(self, ctx: commands.Context):
