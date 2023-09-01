@@ -50,7 +50,7 @@ bot = commands.Bot(
 @bot.event
 async def event_ready():
     logging.info(f"Connected to channel {CHANNEL_NAME}")
-    await bot.send_message(CHANNEL_NAME, "Connected")
+    bot.connected_channels[0].send("Connected")
 
 # SQLite database settings
 database_name = f"{CHANNEL_NAME.lower()}.db"
