@@ -34,7 +34,7 @@ for directory in [logs_directory, bot_logs]:
         os.makedirs(directory_path)
 
 log_file = os.path.join(webroot, bot_logs, f"{CHANNEL_NAME}.txt")
-logging.basicConfig(filename=log_file, level=logging.DEBUG,
+logging.basicConfig(filename=log_file, level=logging.INFO,
                     format="%(asctime)s - %(levelname)s - %(message)s")
 
 # Initialize twitchio bot
