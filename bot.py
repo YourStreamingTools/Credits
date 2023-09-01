@@ -43,12 +43,11 @@ class Bot(commands.Bot):
         self.cursor = cursor
 
     async def event_ready(self):
-        print(f'Logged in as | {self.nick}')
-        print(f'User id is | {self.user_id}')
-
-    @commands.command()
-    async def hello(self, ctx: commands.Context):
-        await ctx.send(f'Hello {ctx.author.name}!')
+        logging.info(f'Logged in as | {self.nick}')
+        logging.info(f'User id is | {self.user_id}')
+        
+        ctx = await self.get_context(self.get_channel(CHANNEL_NAME))
+        await ctx.send(f'Connected!')
 
     @commands.command()
     async def start_bot(self, ctx: commands.Context):
