@@ -113,6 +113,7 @@ if (isset($_POST['killBot'])) {
       <li class="menu-text">YourStreamingTools</li>
       <li><a href="index.php">Dashboard</a></li>
       <li class="is-active"><a href="bot.php">Bot</a></li>
+      <li><a href="profile.php">Profile</a></li>
       <li><a href="logout.php">Logout</a></li>
     </ul>
   </div>
