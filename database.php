@@ -40,11 +40,26 @@ function createTables($database_name) {
 };
 
 function resetDatabase($database_name) {
-    if (file_exists($database_name)) {
-        unlink($database_name);
-        sleep(3);
+  if (file_exists($database_name)) {
+    try {
+      $db = new SQLite3($database_name);
+      // Execute SQL queries to delete all data from tables and reset auto-increment IDs
+      $tables = $db->query("SELECT * FROM sqlite_master WHERE type='table'");
+      while ($table = $tables->fetchArray(SQLITE3_ASSOC)) {
+          $table_name = $table['name'];
+          $db->exec("DELETE FROM $table_name");
+          $db->exec("DELETE FROM sqlite_sequence WHERE name='$table_name'");
+      }
+      // Close the database connection
+      $db->close();
+      
+      // Recreate tables if needed
+      createTables($database_name);
+       
+    } catch (Exception $e) {
+          // Handle exceptions, e.g., log errors
+          echo "Error: " . $e->getMessage();
     }
-
-    createTables($database_name);
-};
+  }
+}
 ?>
