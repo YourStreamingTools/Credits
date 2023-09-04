@@ -119,7 +119,7 @@ while ($row = $raidResults->fetchArray(SQLITE3_ASSOC)) {
 <br>
 <h1><?php echo "$greeting, <img id='profile-image' src='$twitch_profile_image_url' width='50px' height='50px' alt='$twitchDisplayName Profile Image'>$twitchDisplayName!"; ?></h1>
 <br>
-<form method="post"><button type="submit" name="deleteDatabase" class="button alert">Reset Data</button></form>
+<!--<form method="post"><button type="submit" name="deleteDatabase" class="button alert">Reset Data</button></form>-->
 <br>
 <!-- Display sections for each data type -->
 <?php
