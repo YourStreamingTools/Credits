@@ -96,6 +96,7 @@ $endIndex = $startIndex + $followersPerPage;
 
 // Get followers for the current page
 $followersForCurrentPage = array_slice($allFollowers, $startIndex, $followersPerPage);
+$displaySearchBar = count($allFollowers) > $followersPerPage;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -153,34 +154,58 @@ $followersForCurrentPage = array_slice($allFollowers, $startIndex, $followersPer
 <br>
 <h1><?php echo "$greeting, <img id='profile-image' src='$twitch_profile_image_url' width='50px' height='50px' alt='$twitchDisplayName Profile Image'>$twitchDisplayName!"; ?></h1>
 <br>
-  <h1>Your Followers:</h1>
-  <div class="followers-grid">
-    <?php foreach ($followersForCurrentPage as $follower) : 
-        $followerDisplayName = $follower['from_name'];
-    ?>
-    <div class="follower">
-    <span><?php echo $followerDisplayName; ?></span>
-    <span class="follow-time"><?php echo date('Y F d H:i', strtotime($follower['followed_at'])); ?></span>
+<?php if ($displaySearchBar) : ?>
+    <div class="row column">
+        <div class="search-container">
+            <input type="text" id="follower-search" placeholder="Search for Followers...">
+        </div>
     </div>
-    <?php endforeach; ?>
+<?php endif; ?>
+<h1>Your Followers:</h1>
+<div class="followers-grid">
+  <?php foreach ($followersForCurrentPage as $follower) : 
+      $followerDisplayName = $follower['from_name'];
+  ?>
+  <div class="follower">
+  <span><?php echo $followerDisplayName; ?></span>
+  <span class="follow-time"><?php echo date('Y F d H:i', strtotime($follower['followed_at'])); ?></span>
   </div>
+  <?php endforeach; ?>
+</div>
 
-  <!-- Pagination -->
-  <div class="pagination">
-      <?php if ($totalPages > 1) : ?>
-          <?php for ($page = 1; $page <= $totalPages; $page++) : ?>
-              <?php if ($page === $currentPage) : ?>
-                  <span class="current-page"><?php echo $page; ?></span>
-              <?php else : ?>
-                  <a href="?page=<?php echo $page; ?>"><?php echo $page; ?></a>
-              <?php endif; ?>
-          <?php endfor; ?>
-      <?php endif; ?>
-  </div>
+<!-- Pagination -->
+<div class="pagination">
+    <?php if ($totalPages > 1) : ?>
+        <?php for ($page = 1; $page <= $totalPages; $page++) : ?>
+            <?php if ($page === $currentPage) : ?>
+                <span class="current-page"><?php echo $page; ?></span>
+            <?php else : ?>
+                <a href="?page=<?php echo $page; ?>"><?php echo $page; ?></a>
+            <?php endif; ?>
+        <?php endfor; ?>
+    <?php endif; ?>
+</div>
 </div>
 
 <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 <script src="https://dhbhdrzi4tiry.cloudfront.net/cdn/sites/foundation.js"></script>
 <script>$(document).foundation();</script>
+<script>
+$(document).ready(function() {
+    <?php if ($displaySearchBar) : ?>
+    $('#follower-search').on('input', function() {
+        var searchTerm = $(this).val().toLowerCase();
+        $('.follower').each(function() {
+            var followerName = $(this).find('span').text().toLowerCase();
+            if (followerName.includes(searchTerm)) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
+    });
+    <?php endif; ?>
+});
+</script>
 </body>
 </html>
