@@ -96,7 +96,7 @@ $moderatorsData = json_decode($response, true);
   <div class="top-bar-left">
     <ul class="dropdown vertical medium-horizontal menu" data-responsive-menu="drilldown medium-dropdown hinge-in-from-top hinge-out-from-top">
       <li class="menu-text">YourStreamingTools</li>
-      <li class="is-active"><a href="index.php">Dashboard</a></li>
+      <li><a href="index.php">Dashboard</a></li>
       <li><a href="bot.php">Bot</a></li>
       <li>
         <a>Profile</a>
