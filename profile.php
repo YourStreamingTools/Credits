@@ -64,8 +64,13 @@ $last_login_utc = date_create_from_format('Y-m-d H:i:s', $last_login)->setTimezo
       <li class="menu-text">YourStreamingTools</li>
       <li><a href="index.php">Dashboard</a></li>
       <li><a href="bot.php">Bot</a></li>
-      <li class="is-active"><a href="profile.php">Profile</a></li>
-      <li><a href="logout.php">Logout</a></li>
+      <li>
+        <a>Profile</a>
+        <ul class="vertical menu" data-dropdown-menu>
+          <li><a href="profile.php">View Profile</a></li>
+          <li><a href="logout.php">Logout</a></li>
+        </ul>
+      </li>
     </ul>
   </div>
   <div class="top-bar-right">
