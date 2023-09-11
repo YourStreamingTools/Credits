@@ -54,3 +54,26 @@
     color: #777777;
     font-size: 12px;
 }
+
+.subscribers-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* You can change the number of columns here */
+    gap: 20px; /* Adjust the gap between subscribers */
+}
+
+.subscriber {
+    background-color: #f0f0f0; /* Background color for each subscriber box */
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2); /* Add a subtle shadow effect */
+}
+
+.subscriber span {
+    display: block;
+    text-align: center;
+}
+
+.subscription-time {
+    font-size: 12px; /* Adjust the font size for the subscription time */
+    color: #888; /* Color for the subscription time text */
+}
