@@ -96,6 +96,7 @@ $endIndex = $startIndex + $vipsPerPage;
 
 // Get VIPs for the current page
 $VIPsForCurrentPage = array_slice($allVIPs, $startIndex, $vipsPerPage);
+$displaySearchBar = count($allVIPs) > $vipsPerPage;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -153,6 +154,13 @@ $VIPsForCurrentPage = array_slice($allVIPs, $startIndex, $vipsPerPage);
   <br>
   <h1><?php echo "$greeting, <img id='profile-image' src='$twitch_profile_image_url' width='50px' height='50px' alt='$twitchDisplayName Profile Image'>$twitchDisplayName!"; ?></h1>
   <br>
+  <?php if ($displaySearchBar) : ?>
+    <div class="row column">
+        <div class="search-container">
+            <input type="text" id="vip-search" placeholder="Search for VIPs...">
+        </div>
+    </div>
+  <?php endif; ?>
   <h1>Your VIPs:</h1>
   <div class="vip-grid">
         <?php foreach ($VIPsForCurrentPage as $vip) : 
@@ -181,5 +189,22 @@ $VIPsForCurrentPage = array_slice($allVIPs, $startIndex, $vipsPerPage);
 <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 <script src="https://dhbhdrzi4tiry.cloudfront.net/cdn/sites/foundation.js"></script>
 <script>$(document).foundation();</script>
+<script>
+$(document).ready(function() {
+    <?php if ($displaySearchBar) : ?>
+    $('#vip-search').on('input', function() {
+        var searchTerm = $(this).val().toLowerCase();
+        $('.vip').each(function() {
+            var vipName = $(this).find('span').text().toLowerCase();
+            if (vipName.includes(searchTerm)) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
+    });
+    <?php endif; ?>
+});
+</script>
 </body>
 </html>
