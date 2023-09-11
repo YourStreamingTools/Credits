@@ -80,18 +80,18 @@
     text-align: center;
 }
 
-.moderators-time {
+.moderator-time {
     font-size: 12px;
     color: #888;
 }
 
-.moderators-grid {
+.moderator-grid {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     gap: 20px;
 }
 
-.moderators {
+.moderator {
     border: 1px solid #333;
     text-align: center;
     display: flex;
@@ -105,12 +105,12 @@
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
 }
 
-.moderators span {
+.moderator span {
     display: block;
     text-align: center;
 }
 
-.moderators-time {
+.moderator-time {
     font-size: 12px;
     color: #888;
 }
