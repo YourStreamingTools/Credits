@@ -57,15 +57,15 @@
 
 .subscribers-grid {
     display: grid;
-    grid-template-columns: repeat(5, 1fr); /* You can change the number of columns here */
-    gap: 20px; /* Adjust the gap between subscribers */
+    grid-template-columns: repeat(5, 1fr);
+    gap: 20px;
 }
 
 .subscriber {
-    background-color: #f0f0f0; /* Background color for each subscriber box */
+    background-color: #f0f0f0;
     padding: 10px;
     border-radius: 5px;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2); /* Add a subtle shadow effect */
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
 }
 
 .subscriber span {
@@ -73,7 +73,30 @@
     text-align: center;
 }
 
-.subscription-time {
-    font-size: 12px; /* Adjust the font size for the subscription time */
-    color: #888; /* Color for the subscription time text */
+.moderators-time {
+    font-size: 12px;
+    color: #888;
+}
+
+.moderators-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 20px;
+}
+
+.moderators {
+    background-color: #f0f0f0;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+}
+
+.moderators span {
+    display: block;
+    text-align: center;
+}
+
+.moderators-time {
+    font-size: 12px;
+    color: #888;
 }
