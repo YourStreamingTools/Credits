@@ -37,6 +37,7 @@ $username = $user['username'];
 $twitchDisplayName = $user['twitch_display_name'];
 $twitch_profile_image_url = $user['profile_image'];
 $is_admin = ($user['is_admin'] == 1);
+$broadcasterID = $user['twitch_user_id'];
 $webhookURL = $user['webhook_url'];
 $stmt->close();
 
