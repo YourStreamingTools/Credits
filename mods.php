@@ -103,6 +103,7 @@ $moderatorsData = json_decode($response, true);
         <ul class="vertical menu" data-dropdown-menu>
           <li><a href="profile.php">View Profile</a></li>
           <li><a href="mods.php">View Mods</a></li>
+          <li><a href="followers.php">View Followers</a></li>
           <li><a href="logout.php">Logout</a></li>
         </ul>
       </li>
