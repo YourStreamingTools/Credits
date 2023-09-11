@@ -106,6 +106,7 @@ $vipsData = json_decode($response, true);
           <ul class="vertical menu" data-dropdown-menu>
             <li><a href="mods.php">View Mods</a></li>
             <li><a href="followers.php">View Followers</a></li>
+            <li><a href="subscribers.php">View Subscribers</a></li>
             <li><a href="vips.php">View VIPs</a></li>
           </ul>
           </li>
