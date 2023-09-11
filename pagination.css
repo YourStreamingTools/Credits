@@ -62,6 +62,13 @@
 }
 
 .subscriber {
+    border: 1px solid #333;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
     background-color: #f0f0f0;
     padding: 10px;
     border-radius: 5px;
@@ -85,6 +92,13 @@
 }
 
 .moderators {
+    border: 1px solid #333;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
     background-color: #f0f0f0;
     padding: 10px;
     border-radius: 5px;
