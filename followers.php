@@ -43,34 +43,44 @@ $accessToken = $access_token;
 $followersURL = "https://api.twitch.tv/helix/users/follows?to_id=$broadcasterID";
 $clientID = ''; // CHANGE TO MAKE THIS WORK
 
-// Set up cURL request with headers
-$curl = curl_init($followersURL);
-curl_setopt($curl, CURLOPT_HTTPHEADER, [
-    'Authorization: Bearer ' . $accessToken,
-    'Client-ID: ' . $clientID
-]);
-curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+$allFollowers = [];
+do {
+    // Set up cURL request with headers
+    $curl = curl_init($followersURL);
+    curl_setopt($curl, CURLOPT_HTTPHEADER, [
+        'Authorization: Bearer ' . $accessToken,
+        'Client-ID: ' . $clientID
+    ]);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 
-// Execute cURL request
-$response = curl_exec($curl);
+    // Execute cURL request
+    $response = curl_exec($curl);
 
-if ($response === false) {
-    // Handle cURL error
-    echo 'cURL error: ' . curl_error($curl);
-    exit;
-}
+    if ($response === false) {
+        // Handle cURL error
+        echo 'cURL error: ' . curl_error($curl);
+        exit;
+    }
 
-$httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-if ($httpCode !== 200) {
-    // Handle non-successful HTTP response
-    $HTTPError = 'HTTP error: ' . $httpCode;
-    exit;
-}
+    $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+    if ($httpCode !== 200) {
+        // Handle non-successful HTTP response
+        $HTTPError = 'HTTP error: ' . $httpCode;
+        exit;
+    }
 
-curl_close($curl);
+    curl_close($curl);
 
-// Process and display follower information
-$followersData = json_decode($response, true);
+    // Process and append follower information to the array
+    $followersData = json_decode($response, true);
+    $allFollowers = array_merge($allFollowers, $followersData['data']);
+
+    // Check if there are more pages of followers
+    $cursor = $followersData['pagination']['cursor'] ?? null;
+    $followersURL = "https://api.twitch.tv/helix/users/follows?to_id=$broadcasterID&after=$cursor"; // Adjust 'first' as needed
+
+} while ($cursor);
+?>
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -123,7 +133,7 @@ $followersData = json_decode($response, true);
 <?php if ($httpCode !== 200) { echo $HTTPError; exit; } else { ?>
     <h1>Your Followers:</h1>
     <ul>
-        <?php foreach ($followersData['data'] as $follower) : 
+        <?php foreach ($allFollowers as $follower) : 
             $followerDisplayName = $follower['from_name'];
             echo "<li>$followerDisplayName</li>";
         ?><?php endforeach; ?>
