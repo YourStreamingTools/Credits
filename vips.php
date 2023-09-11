@@ -105,6 +105,7 @@ $VIPsForCurrentPage = array_slice($allVIPs, $startIndex, $vipsPerPage);
     <title>YourStreamingTools - Twitch VIPs</title>
     <link rel="stylesheet" href="https://dhbhdrzi4tiry.cloudfront.net/cdn/sites/foundation.min.css">
     <link rel="stylesheet" href="https://cdn.yourstreaming.tools/css/custom.css">
+    <link rel="stylesheet" href="pagination.css">
     <script src="https://cdn.yourstreaming.tools/js/about.js"></script>
   	<link rel="icon" href="https://cdn.yourstreaming.tools/img/logo.jpeg">
   	<link rel="apple-touch-icon" href="https://cdn.yourstreaming.tools/img/logo.jpeg">
@@ -154,13 +155,13 @@ $VIPsForCurrentPage = array_slice($allVIPs, $startIndex, $vipsPerPage);
   <br>
   <h1>Your VIPs:</h1>
   <div class="vip-grid">
-      <?php foreach ($vipsData['data'] as $vip) : 
-          $vipDisplayName = $vip['user_name'];
-      ?>
-      <div class="vip">
-          <span><?php echo $vipDisplayName; ?></span>
-      </div>
-      <?php endforeach; ?>
+        <?php foreach ($VIPsForCurrentPage as $vip) : 
+            $vipDisplayName = $vip['user_name'];
+        ?>
+        <div class="vip">
+            <span><?php echo $vipDisplayName; ?></span>
+        </div>
+        <?php endforeach; ?>
   </div>
 
   <!-- Pagination -->
