@@ -124,21 +124,19 @@ $vipsData = json_decode($response, true);
 <!-- /Navigation -->
 
 <div class="row column">
-    <br>
-    <h1><?php echo "$greeting, <img id='profile-image' src='$twitch_profile_image_url' width='50px' height='50px' alt='$twitchDisplayName Profile Image'>$twitchDisplayName!"; ?></h1>
-    <br>
-    <?php if ($httpCode !== 200) {
-        echo $HTTPError;
-        exit;
-    } else { ?>
-        <h1>Your VIPs:</h1>
-        <ul>
-            <?php foreach ($vipsData['data'] as $vip) :
-                $vipDisplayName = $vip['user_name'];
-                echo "<li>$vipDisplayName</li>";
-            ?><?php endforeach; ?>
-        </ul>
-    <?php } ?>
+  <br>
+  <h1><?php echo "$greeting, <img id='profile-image' src='$twitch_profile_image_url' width='50px' height='50px' alt='$twitchDisplayName Profile Image'>$twitchDisplayName!"; ?></h1>
+  <br>
+  <h1>Your VIPs:</h1>
+  <div class="vip-grid">
+      <?php foreach ($vipsData['data'] as $vip) : 
+          $vipDisplayName = $vip['user_name'];
+      ?>
+      <div class="vip">
+          <span><?php echo $vipDisplayName; ?></span>
+      </div>
+      <?php endforeach; ?>
+  </div>
 </div>
 
 <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
