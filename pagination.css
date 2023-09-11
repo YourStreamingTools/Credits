@@ -114,3 +114,32 @@
     font-size: 12px;
     color: #888;
 }
+
+.vip {
+    border: 1px solid #333;
+    padding: 10px;
+    background-color: #fff;
+    text-align: center;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+}
+
+.vip span {
+    color: #333333;
+    font-weight: bold;
+}
+
+.vip-time {
+    font-size: 12px;
+    color: #888;
+}
+
+.vip-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 20px;
+}
