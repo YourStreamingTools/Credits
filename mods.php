@@ -97,7 +97,6 @@ $endIndex = $startIndex + $moderatorsPerPage;
 // Get moderators for the current page
 $moderatorsForCurrentPage = array_slice($allModerators, $startIndex, $moderatorsPerPage);
 ?>
-?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -106,6 +105,7 @@ $moderatorsForCurrentPage = array_slice($allModerators, $startIndex, $moderators
     <title>YourStreamingTools - Twitch Mods</title>
     <link rel="stylesheet" href="https://dhbhdrzi4tiry.cloudfront.net/cdn/sites/foundation.min.css">
     <link rel="stylesheet" href="https://cdn.yourstreaming.tools/css/custom.css">
+    <link rel="stylesheet" href="pagination.css">
     <script src="https://cdn.yourstreaming.tools/js/about.js"></script>
   	<link rel="icon" href="https://cdn.yourstreaming.tools/img/logo.jpeg">
   	<link rel="apple-touch-icon" href="https://cdn.yourstreaming.tools/img/logo.jpeg">
@@ -154,7 +154,7 @@ $moderatorsForCurrentPage = array_slice($allModerators, $startIndex, $moderators
 <h1><?php echo "$greeting, <img id='profile-image' src='$twitch_profile_image_url' width='50px' height='50px' alt='$twitchDisplayName Profile Image'>$twitchDisplayName!"; ?></h1>
 <br>
 <h1>Your Moderators:</h1>
-  <div class="moderators-grid">
+  <div class="moderator-grid">
       <?php foreach ($moderatorsData['data'] as $moderator) : 
           $modDisplayName = $moderator['user_name'];
       ?>
