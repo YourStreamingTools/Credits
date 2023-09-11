@@ -77,9 +77,25 @@ do {
 
     // Check if there are more pages of followers
     $cursor = $followersData['pagination']['cursor'] ?? null;
-    $followersURL = "https://api.twitch.tv/helix/users/follows?to_id=$broadcasterID&after=$cursor"; // Adjust 'first' as needed
+    $followersURL = "https://api.twitch.tv/helix/users/follows?to_id=$broadcasterID&after=$cursor";
 
 } while ($cursor);
+
+// Number of followers per page
+$followersPerPage = 20;
+
+// Calculate the total number of pages
+$totalPages = ceil(count($allFollowers) / $followersPerPage);
+
+// Current page (default to 1 if not specified)
+$currentPage = isset($_GET['page']) ? max(1, min($totalPages, intval($_GET['page']))) : 1;
+
+// Calculate the start and end index for the current page
+$startIndex = ($currentPage - 1) * $followersPerPage;
+$endIndex = $startIndex + $followersPerPage;
+
+// Get followers for the current page
+$followersForCurrentPage = array_slice($allFollowers, $startIndex, $followersPerPage);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -130,15 +146,26 @@ do {
 <br>
 <h1><?php echo "$greeting, <img id='profile-image' src='$twitch_profile_image_url' width='50px' height='50px' alt='$twitchDisplayName Profile Image'>$twitchDisplayName!"; ?></h1>
 <br>
-<?php if ($httpCode !== 200) { echo $HTTPError; exit; } else { ?>
-    <h1>Your Followers:</h1>
-    <ul>
-        <?php foreach ($allFollowers as $follower) : 
-            $followerDisplayName = $follower['from_name'];
-            echo "<li>$followerDisplayName</li>";
-        ?><?php endforeach; ?>
-    </ul>
-<?php } ?>
+  <h1>Your Followers:</h1>
+  <ul>
+      <?php foreach ($followersForCurrentPage as $follower) : 
+          $followerDisplayName = $follower['from_name'];
+          echo "<li>$followerDisplayName</li>";
+      ?><?php endforeach; ?>
+  </ul>
+
+  <!-- Pagination -->
+  <div class="pagination">
+      <?php if ($totalPages > 1) : ?>
+          <?php for ($page = 1; $page <= $totalPages; $page++) : ?>
+              <?php if ($page === $currentPage) : ?>
+                  <span class="current-page"><?php echo $page; ?></span>
+              <?php else : ?>
+                  <a href="?page=<?php echo $page; ?>"><?php echo $page; ?></a>
+              <?php endif; ?>
+          <?php endfor; ?>
+      <?php endif; ?>
+  </div>
 </div>
 
 <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
