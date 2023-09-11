@@ -44,42 +44,55 @@ $followersURL = "https://api.twitch.tv/helix/users/follows?to_id=$broadcasterID"
 $clientID = ''; // CHANGE TO MAKE THIS WORK
 
 $allFollowers = [];
-do {
-    // Set up cURL request with headers
-    $curl = curl_init($followersURL);
-    curl_setopt($curl, CURLOPT_HTTPHEADER, [
-        'Authorization: Bearer ' . $accessToken,
-        'Client-ID: ' . $clientID
-    ]);
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+$cacheExpiration = 3600; // Cache expires after 1 hour
+$cacheDirectory = "cache/$username";
+$cacheFile = "$cacheDirectory/allFollowers.json";
+if (!is_dir($cacheDirectory)) {
+  mkdir($cacheDirectory, 0755, true);
+}
+if (file_exists($cacheFile) && time() - filemtime($cacheFile) < $cacheExpiration) {
+  $allFollowers = json_decode(file_get_contents($cacheFile), true);
+} else {
+  do {
+      // Set up cURL request with headers
+      $curl = curl_init($followersURL);
+      curl_setopt($curl, CURLOPT_HTTPHEADER, [
+          'Authorization: Bearer ' . $accessToken,
+          'Client-ID: ' . $clientID
+      ]);
+      curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 
-    // Execute cURL request
-    $response = curl_exec($curl);
+      // Execute cURL request
+      $response = curl_exec($curl);
 
-    if ($response === false) {
-        // Handle cURL error
-        echo 'cURL error: ' . curl_error($curl);
-        exit;
-    }
+      if ($response === false) {
+          // Handle cURL error
+          echo 'cURL error: ' . curl_error($curl);
+          exit;
+      }
 
-    $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-    if ($httpCode !== 200) {
-        // Handle non-successful HTTP response
-        $HTTPError = 'HTTP error: ' . $httpCode;
-        exit;
-    }
+      $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+      if ($httpCode !== 200) {
+          // Handle non-successful HTTP response
+          $HTTPError = 'HTTP error: ' . $httpCode;
+          exit;
+      }
 
-    curl_close($curl);
+      curl_close($curl);
 
-    // Process and append follower information to the array
-    $followersData = json_decode($response, true);
-    $allFollowers = array_merge($allFollowers, $followersData['data']);
+      // Process and append follower information to the array
+      $followersData = json_decode($response, true);
+      $allFollowers = array_merge($allFollowers, $followersData['data']);
 
-    // Check if there are more pages of followers
-    $cursor = $followersData['pagination']['cursor'] ?? null;
-    $followersURL = "https://api.twitch.tv/helix/users/follows?to_id=$broadcasterID&after=$cursor";
+      // Save the data to the cache file
+      file_put_contents($cacheFile, json_encode($allFollowers));
 
-} while ($cursor);
+      // Check if there are more pages of followers
+      $cursor = $followersData['pagination']['cursor'] ?? null;
+      $followersURL = "https://api.twitch.tv/helix/users/follows?to_id=$broadcasterID&after=$cursor";
+
+  } while ($cursor);
+}
 
 // Number of followers per page
 $followersPerPage = 50;
