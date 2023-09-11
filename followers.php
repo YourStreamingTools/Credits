@@ -82,7 +82,7 @@ do {
 } while ($cursor);
 
 // Number of followers per page
-$followersPerPage = 20;
+$followersPerPage = 50;
 
 // Calculate the total number of pages
 $totalPages = ceil(count($allFollowers) / $followersPerPage);
@@ -105,6 +105,7 @@ $followersForCurrentPage = array_slice($allFollowers, $startIndex, $followersPer
     <title>YourStreamingTools - Twitch Mods</title>
     <link rel="stylesheet" href="https://dhbhdrzi4tiry.cloudfront.net/cdn/sites/foundation.min.css">
     <link rel="stylesheet" href="https://cdn.yourstreaming.tools/css/custom.css">
+    <link rel="stylesheet" href="pagination.css">
     <script src="https://cdn.yourstreaming.tools/js/about.js"></script>
   	<link rel="icon" href="https://cdn.yourstreaming.tools/img/logo.jpeg">
   	<link rel="apple-touch-icon" href="https://cdn.yourstreaming.tools/img/logo.jpeg">
@@ -121,7 +122,7 @@ $followersForCurrentPage = array_slice($allFollowers, $startIndex, $followersPer
   <div class="top-bar-left">
     <ul class="dropdown vertical medium-horizontal menu" data-responsive-menu="drilldown medium-dropdown hinge-in-from-top hinge-out-from-top">
       <li class="menu-text">YourStreamingTools</li>
-      <li class="is-active"><a href="index.php">Dashboard</a></li>
+      <li><a href="index.php">Dashboard</a></li>
       <li><a href="bot.php">Bot</a></li>
       <li>
         <a>Profile</a>
@@ -147,12 +148,16 @@ $followersForCurrentPage = array_slice($allFollowers, $startIndex, $followersPer
 <h1><?php echo "$greeting, <img id='profile-image' src='$twitch_profile_image_url' width='50px' height='50px' alt='$twitchDisplayName Profile Image'>$twitchDisplayName!"; ?></h1>
 <br>
   <h1>Your Followers:</h1>
-  <ul>
-      <?php foreach ($followersForCurrentPage as $follower) : 
-          $followerDisplayName = $follower['from_name'];
-          echo "<li>$followerDisplayName</li>";
-      ?><?php endforeach; ?>
-  </ul>
+  <div class="followers-grid">
+    <?php foreach ($followersForCurrentPage as $follower) : 
+        $followerDisplayName = $follower['from_name'];
+    ?>
+    <div class="follower">
+    <span><?php echo $followerDisplayName; ?></span>
+    <span class="follow-time"><?php echo date('Y F d H:i', strtotime($follower['followed_at'])); ?></span>
+    </div>
+    <?php endforeach; ?>
+  </div>
 
   <!-- Pagination -->
   <div class="pagination">
