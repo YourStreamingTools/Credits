@@ -82,29 +82,6 @@ do {
 
 } while ($cursor);
 
-// Process and display subscriber information
-$subscribersData = json_decode($response, true);
-$allSubscribers = $subscribersData['data'];
-
-// Function to get subscription tier based on cumulative months
-function getSubscriptionTier($cumulativeMonths) {
-    if ($cumulativeMonths >= 1000) {
-        return 'Tier 1';
-    } elseif ($cumulativeMonths >= 2000) {
-        return 'Tier 2';
-    } elseif ($cumulativeMonths >= 3000) {
-        return 'Tier 3';
-    } else {
-        return 'Unknown';
-    }
-}
-
-// Retrieve the subscription tier for each subscriber
-foreach ($allSubscribers as &$subscriber) {
-    $cumulativeMonths = $subscriber['cumulative_months'] ?? 0;
-    $subscriber['subscription_tier'] = getSubscriptionTier($cumulativeMonths);
-}
-
 // Number of subscribers per page
 $subscribersPerPage = 50;
 
@@ -179,17 +156,31 @@ $subscribersForCurrentPage = array_slice($allSubscribers, $startIndex, $subscrib
   <br>
   <h1>Your Subscribers:</h1>
   <div class="subscribers-grid">
-      <?php foreach ($subscribersForCurrentPage as $subscriber) : 
-          $subscriberDisplayName = $subscriber['user_name'];
-          $isGift = $subscriber['is_gift'] ?? false;
-          $gifterName = $subscriber['gifter_name'] ?? '';
-          if ($isGift) {
-              echo "<div class='subscriber'><span>$subscriberDisplayName</span><span>Gift Sub from $gifterName</span></div>";
-          } else {
-              echo "<div class='subscriber'><span>$subscriberDisplayName</span></div>";
-          }
-      ?>
-      <?php endforeach; ?>
+    <?php foreach ($subscribersForCurrentPage as $subscriber) : 
+        $subscriberDisplayName = $subscriber['user_name'];
+        $isGift = $subscriber['is_gift'] ?? false;
+        $gifterName = $subscriber['gifter_name'] ?? '';
+        $subscriptionTier = '';
+
+        // Determine the subscription tier based on the subscription plan ID
+        $subscriptionPlanId = $subscriber['tier'];
+        if ($subscriptionPlanId == '1000') {
+            $subscriptionTier = '1';
+        } elseif ($subscriptionPlanId == '2000') {
+            $subscriptionTier = '2';
+        } elseif ($subscriptionPlanId == '3000') {
+            $subscriptionTier = '3';
+        } else {
+            $subscriptionTier = 'Unknown';
+        }
+
+        if ($isGift) {
+            echo "<div class='subscriber'><span>$subscriberDisplayName</span><span>Subscription Tier: $subscriptionTier</span><span>Gift Sub from $gifterName</span></div>";
+        } else {
+            echo "<div class='subscriber'><span>$subscriberDisplayName</span><span>Subscription Tier: $subscriptionTier</span></div>";
+        }
+    ?>
+    <?php endforeach; ?>
   </div>
 
   <!-- Pagination -->
