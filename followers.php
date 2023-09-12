@@ -44,6 +44,7 @@ $followersURL = "https://api.twitch.tv/helix/users/follows?to_id=$broadcasterID"
 $clientID = ''; // CHANGE TO MAKE THIS WORK
 
 $allFollowers = [];
+$liveData = "";
 $cacheExpiration = 3600; // Cache expires after 1 hour
 $cacheDirectory = "cache/$username";
 $cacheFile = "$cacheDirectory/allFollowers.json";
@@ -52,6 +53,7 @@ if (!is_dir($cacheDirectory)) {
 }
 if (file_exists($cacheFile) && time() - filemtime($cacheFile) < $cacheExpiration) {
   $allFollowers = json_decode(file_get_contents($cacheFile), true);
+  $liveData = "Follower results are cached up to 1 hour.";
 } else {
   do {
       // Set up cURL request with headers
@@ -86,6 +88,7 @@ if (file_exists($cacheFile) && time() - filemtime($cacheFile) < $cacheExpiration
 
       // Save the data to the cache file
       file_put_contents($cacheFile, json_encode($allFollowers));
+      $liveData = "Follower results have been cached, you're viewing live data.";
 
       // Check if there are more pages of followers
       $cursor = $followersData['pagination']['cursor'] ?? null;
@@ -175,6 +178,7 @@ $displaySearchBar = count($allFollowers) > $followersPerPage;
     </div>
 <?php endif; ?>
 <h1>Your Followers:</h1>
+<h3><? echo $liveData ?></h3>
 <div class="followers-grid">
   <?php foreach ($followersForCurrentPage as $follower) : 
       $followerDisplayName = $follower['from_name'];
