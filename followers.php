@@ -40,7 +40,7 @@ $is_admin = ($user['is_admin'] == 1);
 $accessToken = $access_token;
 
 // API endpoint to fetch followers
-$followersURL = "https://api.twitch.tv/helix/users/follows?to_id=$broadcasterID";
+$followersURL = "https://api.twitch.tv/helix/channels/followers?broadcaster_id=$broadcasterID";
 $clientID = ''; // CHANGE TO MAKE THIS WORK
 
 $allFollowers = [];
@@ -69,6 +69,19 @@ if (file_exists($cacheFile) && time() - filemtime($cacheFile) < $cacheExpiration
 
       if ($response === false) {
           // Handle cURL error
+          $errorInfo = curl_getinfo($curl);
+          $errorMessage = 'cURL error: ' . curl_error($curl);
+          $errorDetails = 'URL: ' . $errorInfo['url'] . ' | HTTP Code: ' . $errorInfo['http_code'];
+    
+          // Log the error to a file for debugging
+          error_log($errorMessage . ' | ' . $errorDetails, 3, 'curl_errors.log');
+    
+          echo 'An error occurred while fetching data. Please try again later.';
+          exit;
+      }
+
+      if ($response === false) {
+          // Handle cURL error
           echo 'cURL error: ' . curl_error($curl);
           exit;
       }
@@ -77,6 +90,7 @@ if (file_exists($cacheFile) && time() - filemtime($cacheFile) < $cacheExpiration
       if ($httpCode !== 200) {
           // Handle non-successful HTTP response
           $HTTPError = 'HTTP error: ' . $httpCode;
+          echo "$HTTPError";
           exit;
       }
 
@@ -92,7 +106,7 @@ if (file_exists($cacheFile) && time() - filemtime($cacheFile) < $cacheExpiration
 
       // Check if there are more pages of followers
       $cursor = $followersData['pagination']['cursor'] ?? null;
-      $followersURL = "https://api.twitch.tv/helix/users/follows?to_id=$broadcasterID&after=$cursor";
+      $followersURL = "https://api.twitch.tv/helix/channels/followers?broadcaster_id=$broadcasterID&after=$cursor";
 
   } while ($cursor);
 }
@@ -181,7 +195,7 @@ $displaySearchBar = count($allFollowers) > $followersPerPage;
 <h3><? echo $liveData ?></h3>
 <div class="followers-grid">
   <?php foreach ($followersForCurrentPage as $follower) : 
-      $followerDisplayName = $follower['from_name'];
+      $followerDisplayName = $follower['user_name'];
   ?>
   <div class="follower">
   <span><?php echo $followerDisplayName; ?></span>
