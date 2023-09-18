@@ -119,7 +119,7 @@ if (isset($_POST['restartBot'])) {
 
     // Fetch the bot's PID from status.py
     $statusOutput = shell_exec("python status.py -channel $username");
-    $pid = intval(trim($statusOutput));
+    $pid = intval(preg_replace('/\D/', '', $statusOutput));
     $statusOutput = "Bot restarted successfully. Process ID: $pid";
   } else {
     $statusOutput = "Can't restart bot, bot is not running.";
