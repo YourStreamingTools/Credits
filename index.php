@@ -10,7 +10,6 @@ if (!isset($_SESSION['access_token'])) {
 
 // Connect to database
 require_once "db_connect.php";
-include 'database.php';
 
 // Get the current hour in 24-hour format (0-23)
 $currentHour = date('G');
@@ -42,17 +41,23 @@ $webhookURL = $user['webhook_url'];
 $stmt->close();
 
 $database_name = "{$username}.db";
+$database = "database/{$database_name}";
+include 'database.php';
+
 // Create the SQLite database if it doesn't exist
-if (!file_exists($database_name)) {
-    createTables($database_name);
+if (!file_exists($database)) {
+    createTables($database);
 }
+
 if (isset($_POST['resetDatabase'])) {
-    resetDatabase($database_name);
+    resetDatabase($database);
 }
 
 $totalRaidersToday = 0;
 $totalViewersFromRaids = 0;
-$conn = new SQLite3($database_name);
+
+// Establish a connection to the SQLite database
+$conn = new SQLite3($database);
 $followerResults = $conn->query("SELECT follower_name, timestamp FROM followers ORDER BY timestamp DESC");
 $subscriberResults = $conn->query("SELECT subscriber_name, subscriber_tier, subscription_months, timestamp FROM subscribers ORDER BY timestamp DESC");
 $cheerResults = $conn->query("SELECT username, cheer_amount, timestamp FROM cheers ORDER BY timestamp DESC");
