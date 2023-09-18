@@ -31,16 +31,17 @@ function createTables($database) {
     )";
 
     // Execute the table creation queries
-    $conn->exec($createFollowersTable);
-    $conn->exec($createSubscribersTable);
-    $conn->exec($createCheersTable);
-    $conn->exec($createRaidsTable);
+    if ($conn->exec($createFollowersTable) && $conn->exec($createSubscribersTable) &&
+        $conn->exec($createCheersTable) && $conn->exec($createRaidsTable)) {
+    } else {
+        echo "Error creating tables. (database.php)";
+    }
     $conn->close();
 }
 
 function resetDatabase($database) {
   if (file_exists($database)) {
-    try {   
+    try {
       // Recreate tables if needed
       createTables($database);
        
