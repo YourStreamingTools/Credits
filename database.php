@@ -1,6 +1,6 @@
 <?php
-function createTables($database_name) {
-    $conn = new SQLite3($database_name);
+function createTables($database) {
+    $conn = new SQLite3($database);
 
     // Create tables for different interactions (followers, subscribers, cheers, raids)
     $createFollowersTable = "CREATE TABLE IF NOT EXISTS followers (
@@ -39,10 +39,10 @@ function createTables($database_name) {
     $conn->close();
 };
 
-function resetDatabase($database_name) {
-  if (file_exists($database_name)) {
+function resetDatabase($database) {
+  if (file_exists($database)) {
     try {
-      $db = new SQLite3($database_name);
+      $db = new SQLite3($database);
       // Execute SQL queries to delete all data from tables and reset auto-increment IDs
       $tables = $db->query("SELECT * FROM sqlite_master WHERE type='table'");
       while ($table = $tables->fetchArray(SQLITE3_ASSOC)) {
@@ -54,7 +54,7 @@ function resetDatabase($database_name) {
       $db->close();
       
       // Recreate tables if needed
-      createTables($database_name);
+      createTables($database);
        
     } catch (Exception $e) {
           // Handle exceptions, e.g., log errors
