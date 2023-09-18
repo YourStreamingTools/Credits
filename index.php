@@ -41,13 +41,12 @@ $webhookURL = $user['webhook_url'];
 $stmt->close();
 
 $database_name = "{$username}.db";
-$database = "database/{$database_name}";
+$database_directory = "database";
+$database = "{$database_directory}/{$database_name}";
 include 'database.php';
 
 // Create the SQLite database if it doesn't exist
-if (file_exists($database)) { 
-  // CONTINUE
-} else {
+if (!file_exists($database)) { 
   createTables($database);
 }
 
@@ -62,7 +61,7 @@ $totalViewersFromRaids = 0;
 $conn = new SQLite3($database);
 $followerResults = $conn->query("SELECT follower_name, timestamp FROM followers ORDER BY timestamp DESC");
 $subscriberResults = $conn->query("SELECT subscriber_name, subscriber_tier, subscription_months, timestamp FROM subscribers ORDER BY timestamp DESC");
-$cheerResults = $conn->query("SELECT username, cheer_amount, timestamp FROM cheers ORDER BY timestamp DESC");
+$cheerResults = $conn->query("SELECT username, cheer_amount FROM cheers ORDER BY cheer_amount DESC");
 $raidResults = $conn->query("SELECT raider_name, timestamp FROM raids ORDER BY timestamp DESC");
 
 $followerData = array();
