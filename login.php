@@ -4,6 +4,7 @@ $clientID = ''; // CHANGE TO MAKE THIS WORK
 $redirectURI = ''; // CHANGE TO MAKE THIS WORK
 $clientSecret = ''; // CHANGE TO MAKE THIS WORK
 $IDScope = 'openid chat:read moderation:read moderator:read:followers channel:read:vips channel:read:subscriptions moderator:read:chatters bits:read';
+$info = "Please wait while we redirect you to Twitch for authorization.";
 
 // Start PHP session
 session_start();
@@ -115,13 +116,11 @@ if (isset($_GET['code'])) {
             exit;
         } else {
             // Handle the case where the insertion failed
-            echo "Failed to save user information.";
-            exit;
+            $info = "Failed to save user information.";
         }
     } else {
         // Failed to fetch user information from Twitch
-        echo "Failed to fetch user information from Twitch.";
-        exit;
+        $info = "Failed to fetch user information from Twitch.";
     }
 }
 ?>
@@ -134,7 +133,4 @@ if (isset($_GET['code'])) {
     <link rel="apple-touch-icon" href="https://cdn.yourstreaming.tools/img/logo.jpeg" />
     <meta name="msapplication-TileImage" content="https://cdn.yourstreaming.tools/img/logo.jpeg" />
 </head>
-<body>
-    <p>Please wait while we redirect you to Twitch for authorization...</p>
-</body>
-</html>
+<body><?php echo "<p>$info</p></body></html>"; exit; ?>
