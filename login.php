@@ -117,10 +117,12 @@ if (isset($_GET['code'])) {
         } else {
             // Handle the case where the insertion failed
             $info = "Failed to save user information.";
+            exit;
         }
     } else {
         // Failed to fetch user information from Twitch
         $info = "Failed to fetch user information from Twitch.";
+        exit;
     }
 }
 ?>
@@ -133,4 +135,4 @@ if (isset($_GET['code'])) {
     <link rel="apple-touch-icon" href="https://cdn.yourstreaming.tools/img/logo.jpeg" />
     <meta name="msapplication-TileImage" content="https://cdn.yourstreaming.tools/img/logo.jpeg" />
 </head>
-<body><?php echo "<p>$info</p></body></html>"; exit; ?>
+<body><?php echo "<p>$info</p></body></html>";?>
