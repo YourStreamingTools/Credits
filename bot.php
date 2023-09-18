@@ -111,8 +111,6 @@ if (isset($_POST['restartBot'])) {
     // Sleep for a few seconds to allow the process to start
     sleep(3);
 
-    $statusOutput = "Bot has been stopped.";
-
     // Start the bot
     $output = shell_exec("python bot.py -channel $username -channelid $twitchUserId -token $authToken > /dev/null 2>&1 &");
   
@@ -122,10 +120,9 @@ if (isset($_POST['restartBot'])) {
     // Fetch the bot's PID from status.py
     $statusOutput = shell_exec("python status.py -channel $username");
     $pid = intval(trim($statusOutput));
-  } if ($pid > 0) {
-    $statusOutput = "Bot restarted successfully.";
+    $statusOutput = "Bot restarted successfully. Process ID: $pid";
   } else {
-    $statusOutput = "Failed to restart the bot.";
+    $statusOutput = "Can't restart bot, bot is not running.";
   }
 }
 ?>
