@@ -10,7 +10,7 @@ import logging
 import signal
 
 # Parse command-line arguments
-parser = argparse.ArgumentParser(description="Twitch Chat Bot")
+parser = argparse.ArgumentParser(description="YourStreamingTools Chat Bot")
 parser.add_argument("-channel", dest="target_channel", required=True, help="Target Twitch channel name")
 parser.add_argument("-channelid", dest="channel_id", required=True, help="Twitch user ID")
 parser.add_argument("-token", dest="auth_token", required=True, help="Auth Token for authentication")
@@ -53,7 +53,7 @@ logging.basicConfig(filename=log_file, level=logging.INFO,
 
 class Bot(commands.Bot):
     def __init__(self, cursor):
-        super().__init__(token=OAUTH_TOKEN, prefix='$', initial_channels=[CHANNEL_NAME])
+        super().__init__(token=OAUTH_TOKEN, prefix='!', initial_channels=[CHANNEL_NAME])
         self.cursor = cursor
 
     async def event_ready(self):
@@ -121,7 +121,7 @@ class Bot(commands.Bot):
                     conn.commit()
 
             # Your API request to get cheer information
-            cheer_api_url = f"https://api.twitch.tv/helix/bits/leaderboard?user_id={CHANNEL_ID}"
+            cheer_api_url = f"https://api.twitch.tv/helix/bits/leaderboard?period=all"
             cheer_headers = {
                 'Client-ID': CLIENT_ID,
                 'Authorization': f'Bearer {args.auth_token}'
@@ -136,12 +136,8 @@ class Bot(commands.Bot):
             for cheer in cheer_data.get('data', []):
                 username = cheer['user_name']
                 cheer_amount = cheer['score']
-                cheer_timestamp = datetime.strptime(cheer['created_at'], '%Y-%m-%dT%H:%M:%SZ')
-                cheer_date = cheer_timestamp.date()
-
-                if cheer_date == current_date:
-                    cursor.execute("INSERT INTO cheers (username, cheer_amount, timestamp) VALUES (?, ?, ?)", (username, cheer_amount, current_time))
-                    conn.commit()
+                cursor.execute("INSERT INTO cheers (username, cheer_amount) VALUES (?, ?, ?)", (username, cheer_amount))
+                conn.commit()
 
             # Your API request to get raid information
             #raid_api_url = f"https://api.twitch.tv/helix/channels/raids?broadcaster_id={CHANNEL_ID}"
@@ -188,8 +184,9 @@ class Bot(commands.Bot):
                 time.sleep(60)
 
 # Create a connection to the SQLite database
-database_name = f"{CHANNEL_NAME.lower()}.db"
-conn = sqlite3.connect(database_name)
+database_folder = "database"
+database_file = os.path.join(database_folder, f"{CHANNEL_NAME.lower()}.db")
+conn = sqlite3.connect(database_file)
 cursor = conn.cursor()
 
 # Create an instance of your Bot class and pass the cursor
