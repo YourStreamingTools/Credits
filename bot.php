@@ -52,18 +52,34 @@ $botProfileImageUrl = $botData['profile_image'];
 $botSTMT->close();
 $statusOutput = 'Bot Status: Unkown';
 $pid = '';
-unset($_SESSION['bot_pid']);
+
+function isBotRunning($username) {
+  $statusOutput = shell_exec("python status.py -channel $username");
+  $pid = intval(preg_replace('/\D/', '', $statusOutput));
+  return ($pid > 0);
+}
 
 if (isset($_POST['runBot'])) {
+// Check if the bot is already running
+if (isBotRunning($username)) {
+  $statusOutput = "Bot is already running.";
+} else {
   // Execute the Python script with the channel name as an argument
   $output = shell_exec("python bot.py -channel $username -channelid $twitchUserId -token $authToken > /dev/null 2>&1 &");
-  
+
   // Sleep for a few seconds to allow the process to start
   sleep(3);
 
   // Fetch the bot's PID from status.py
   $statusOutput = shell_exec("python status.py -channel $username");
   $pid = intval(trim($statusOutput));
+
+  if ($pid > 0) {
+    echo "Bot started successfully.";
+  } else {
+    echo "Failed to start the bot.";
+  }
+}
 }
 
 if (isset($_POST['botStatus'])) {
@@ -72,20 +88,19 @@ if (isset($_POST['botStatus'])) {
 }
 
 if (isset($_POST['killBot'])) {
-  if (isset($pid)) {
-    // Kill the bot's process
-    $killprocess = shell_exec("kill $pid > /dev/null 2>&1 &");
-    
-    // Sleep for a few seconds to allow the process to start
-    sleep(3);
+  $statusOutput = shell_exec("python status.py -channel $username");
+  $pid = intval(preg_replace('/\D/', '', $statusOutput));
 
-    // Remove the bot's PID from the session
-    unset($_SESSION['bot_pid']);
+  // Kill the bot's process
+  $killprocess = shell_exec("kill $pid > /dev/null 2>&1 &");
     
-    $statusOutput = "Bot Status: Stopped.";
-  } else {
-    $statusOutput = "Bot Status: Bot not running";
-  }
+  // Sleep for a few seconds to allow the process to start
+  sleep(3);
+
+  // Remove the bot's PID from the session
+  $pid = '';
+    
+  $statusOutput = "Bot Status: Stopped.";
 }
 ?>
 <!DOCTYPE html>
@@ -148,7 +163,7 @@ if (isset($_POST['killBot'])) {
   <tr>
     <td><form action="" method="post"><button class="defult-button" type="submit" name="runBot">Run Bot</button></form></td>
     <td><form action="" method="post"><button class="defult-button" type="submit" name="botStatus">Check Bot Status</button></form></td>
-    <!--<td><form action="" method="post"><button class="defult-button" type="submit" name="killBot">Stop Bot</button></form></td>-->
+    <td><form action="" method="post"><button class="defult-button" type="submit" name="killBot">Stop Bot</button></form></td>
   </tr>
 </table>
 <?php if ($is_admin) { ?><br><a href="bot-login.php"><button class="defult-button"name="BotLogin">Bot Loin</button></a><?php } ?>
