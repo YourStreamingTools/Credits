@@ -7,6 +7,7 @@ import twitchio
 from twitchio.ext import commands
 import os
 import logging
+import signal
 
 # Parse command-line arguments
 parser = argparse.ArgumentParser(description="Twitch Chat Bot")
@@ -14,6 +15,18 @@ parser.add_argument("-channel", dest="target_channel", required=True, help="Targ
 parser.add_argument("-channelid", dest="channel_id", required=True, help="Twitch user ID")
 parser.add_argument("-token", dest="auth_token", required=True, help="Auth Token for authentication")
 args = parser.parse_args()
+
+# Define a flag to control the main loop
+running = True
+
+# Define a signal handler function to handle Ctrl+C (SIGINT)
+def signal_handler(sig, frame):
+    global running
+    print("Exiting gracefully...")
+    running = False
+
+# Set up the signal handler to listen for Ctrl+C
+signal.signal(signal.SIGINT, signal_handler)
 
 # Twitch bot settings
 BOT_USERNAME = ""  # CHANGE TO MAKE THIS WORK
@@ -54,6 +67,9 @@ class Bot(commands.Bot):
         while True:
             current_time = int(time.time())  # Get current UNIX timestamp
 
+            twitch_log_file = os.path.join(webroot, twitch_logs, f"{CHANNEL_NAME}.txt")
+            logging.basicConfig(filename=twitch_log_file, level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+
             # Your API request to get follower information
             follower_api_url = f"https://api.twitch.tv/helix/channels/followers?broadcaster_id={CHANNEL_ID}"
             follower_headers = {
@@ -63,17 +79,22 @@ class Bot(commands.Bot):
             follower_response = requests.get(follower_api_url, headers=follower_headers)
             follower_data = follower_response.json()
 
+            # Log the API request and response for debugging
+            logging.info(f"Follower API URL: {follower_api_url}")
+            logging.info(f"Follower API Response: {follower_response.text}")
+            
             # Get the current date
             current_date = datetime.now().date()
 
             # Extract and insert recent follower information into the database
             for follower in follower_data.get('data', []):
-                follower_name = follower['from_name']
+                follower_name = follower['user_name']
                 followed_at = datetime.strptime(follower['followed_at'], '%Y-%m-%dT%H:%M:%SZ').date()
-
                 if followed_at == current_date:
                     cursor.execute("INSERT INTO followers (follower_name, timestamp) VALUES (?, ?)", (follower_name, current_time))
                     conn.commit()
+                    # Log each follower for debugging
+                    logging.info(f"Follower: {follower_name}, Followed At: {followed_at}")
 
             # Your API request to get subscriber information
             subscriber_api_url = f"https://api.twitch.tv/helix/subscriptions?broadcaster_id={CHANNEL_ID}"
