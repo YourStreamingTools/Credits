@@ -55,7 +55,7 @@ class Bot(commands.Bot):
             current_time = int(time.time())  # Get current UNIX timestamp
 
             # Your API request to get follower information
-            follower_api_url = f"https://api.twitch.tv/helix/users/follows?to_id={CHANNEL_ID}"
+            follower_api_url = f"https://api.twitch.tv/helix/channels/followers?broadcaster_id={CHANNEL_ID}"
             follower_headers = {
                 'Client-ID': CLIENT_ID,
                 'Authorization': f'Bearer {args.auth_token}'
