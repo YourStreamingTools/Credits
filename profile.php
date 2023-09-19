@@ -10,7 +10,10 @@ if (!isset($_SESSION['access_token'])) {
 
 // Connect to database
 require_once "db_connect.php";
-include 'timezone.php';
+
+// Default Timezone Settings
+$defaultTimeZone = 'Etc/UTC';
+$user_timezone = $defaultTimeZone;
 
 // Fetch the user's data from the database based on the access_token
 $access_token = $_SESSION['access_token'];
@@ -26,13 +29,37 @@ $twitch_profile_image_url = $user['profile_image'];
 $signup_date = $user['signup_date'];
 $last_login = $user['last_login'];
 $user_timezone = $user['timezone'];
-// If the user's time zone is not set, default to UTC
-if ($user_timezone === null) {
-    $user_timezone = 'UTC';
+date_default_timezone_set($user_timezone);
+
+// Determine the greeting based on the user's local time
+$currentHour = date('G');
+$greeting = '';
+
+if ($currentHour < 12) {
+    $greeting = "Good morning";
+} else {
+    $greeting = "Good afternoon";
 }
 
-// Convert the stored date and time to UTC using Sydney time zone (AEST/AEDT)
-date_default_timezone_set('Australia/Sydney');
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $selectedTimeZone = $_POST["timezone"];
+
+    // Update the user's time zone in the database
+    $stmt = $conn->prepare("UPDATE users SET timezone = ? WHERE id = ?");
+    $stmt->bind_param("si", $selectedTimeZone, $user_id);
+    $stmt->execute();
+
+    // Update the user's time zone in the current session
+    $user_timezone = $selectedTimeZone;
+}
+
+$timezones_query = $conn->query("SELECT * FROM timezones");
+$timezones = [];
+
+while ($row = $timezones_query->fetch_assoc()) {
+    $timezones[] = $row['name'];
+}
+
 $signup_date_utc = date_create_from_format('Y-m-d H:i:s', $signup_date)->setTimezone(new DateTimeZone('UTC'))->format('F j, Y g:i A');
 $last_login_utc = date_create_from_format('Y-m-d H:i:s', $last_login)->setTimezone(new DateTimeZone('UTC'))->format('F j, Y g:i A');
 ?>
@@ -93,17 +120,19 @@ $last_login_utc = date_create_from_format('Y-m-d H:i:s', $last_login)->setTimezo
     <p><strong>Display Name:</strong> <?php echo $twitchDisplayName; ?></p>
     <p><strong>You Joined:</strong> <span id="localSignupDate"></span></p>
     <p><strong>Your Last Login:</strong> <span id="localLastLogin"></span></p>
-    <p>Your Time Zone: <?php echo $user_timezone; ?></p>
-    <h1>Choose your time zone:</h1>
-    <form action="timezone.php" method="post">
+    <p><strong>Your Time Zone:</strong> <?php echo $user_timezone; ?></p>
+    <p>Choose your time zone:</p>
+    <form action="" method="post">
         <select name="timezone">
             <?php foreach ($timezones as $timezone) {
                 $selected = ($timezone == $defaultTimeZone) ? 'selected' : '';
-                echo "<option value='$timezone' $selected>$timezone</option>";
+                echo "<option value='$timezone' $selected>$timezone</option>
+                ";
             } ?>
         </select>
-        <input type="submit" value="Submit">
+        <input type="submit" value="Submit" class="button">
     </form>
+    <br>
     <a href="logout.php" type="button" class="logout-button">Logout</a>
 </div>
 <!-- Include the JavaScript files -->
