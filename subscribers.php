@@ -12,21 +12,10 @@ if (!isset($_SESSION['access_token'])) {
 // Connect to database
 require_once "db_connect.php";
 include 'database.php';
-
-// Get the current hour in 24-hour format (0-23)
-$currentHour = date('G');
-// Initialize the greeting variable
-$greeting = '';
-// Check if it's before 12 PM (noon)
-if ($currentHour < 12) {
-    $greeting = "Good morning";
-} else {
-    $greeting = "Good afternoon";
-}
+include 'timezone.php';
 
 // Fetch the user's data from the database based on the access_token
 $access_token = $_SESSION['access_token'];
-
 $stmt = $conn->prepare("SELECT * FROM users WHERE access_token = ?");
 $stmt->bind_param("s", $access_token);
 $stmt->execute();
@@ -39,6 +28,11 @@ $twitchDisplayName = $user['twitch_display_name'];
 $twitch_profile_image_url = $user['profile_image'];
 $is_admin = ($user['is_admin'] == 1);
 $accessToken = $access_token;
+$user_timezone = $user['timezone'];
+// If the user's time zone is not set, default to UTC
+if ($user_timezone === null) {
+    $user_timezone = 'UTC';
+}
 
 // API endpoint to fetch subscribers
 $subscribersURL = "https://api.twitch.tv/helix/subscriptions?broadcaster_id=$broadcasterID";
