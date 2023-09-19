@@ -11,7 +11,10 @@ if (!isset($_SESSION['access_token'])) {
 // Connect to database
 require_once "db_connect.php";
 include 'database.php';
-include 'timezone.php';
+
+// Default Timezone Settings
+$defaultTimeZone = 'Etc/UTC';
+$user_timezone = $defaultTimeZone;
 
 // Fetch the user's data from the database based on the access_token
 $access_token = $_SESSION['access_token'];
@@ -26,11 +29,17 @@ $broadcasterID = $user['twitch_user_id'];
 $twitchDisplayName = $user['twitch_display_name'];
 $twitch_profile_image_url = $user['profile_image'];
 $is_admin = ($user['is_admin'] == 1);
-$accessToken = $access_token;
 $user_timezone = $user['timezone'];
-// If the user's time zone is not set, default to UTC
-if ($user_timezone === null) {
-    $user_timezone = 'UTC';
+date_default_timezone_set($user_timezone);
+
+// Determine the greeting based on the user's local time
+$currentHour = date('G');
+$greeting = '';
+
+if ($currentHour < 12) {
+    $greeting = "Good morning";
+} else {
+    $greeting = "Good afternoon";
 }
 
 // API endpoint to fetch followers
