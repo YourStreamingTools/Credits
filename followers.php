@@ -26,6 +26,7 @@ $user = $result->fetch_assoc();
 $user_id = $user['id'];
 $username = $user['username'];
 $broadcasterID = $user['twitch_user_id'];
+$accessToken = $access_token;
 $twitchDisplayName = $user['twitch_display_name'];
 $twitch_profile_image_url = $user['profile_image'];
 $is_admin = ($user['is_admin'] == 1);
