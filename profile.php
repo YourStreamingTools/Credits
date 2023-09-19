@@ -121,17 +121,17 @@ $last_login_utc = date_create_from_format('Y-m-d H:i:s', $last_login)->setTimezo
     <p><strong>You Joined:</strong> <span id="localSignupDate"></span></p>
     <p><strong>Your Last Login:</strong> <span id="localLastLogin"></span></p>
     <p><strong>Your Time Zone:</strong> <?php echo $user_timezone; ?></p>
-    <p>Choose your time zone:</p>
-    <form action="" method="post">
-        <select name="timezone">
-            <?php foreach ($timezones as $timezone) {
-                $selected = ($timezone == $defaultTimeZone) ? 'selected' : '';
-                echo "<option value='$timezone' $selected>$timezone</option>
-                ";
-            } ?>
+    <table><tbody>
+    <th><p>Choose your time zone:</p></th>
+    <td><form action="" method="post">
+    <select name="timezone">
+    <?php foreach ($timezones as $timezone) {
+        $selected = ($timezone == $user_timezone) ? 'selected' : ''; // Compare with user's timezone
+        echo "<option value='$timezone'$selected>$timezone</option>
+             "; } ?>
         </select>
-        <input type="submit" value="Submit" class="button">
-    </form>
+        </td><td><input type="submit" value="Submit" class="button">
+    </form></td></tbody></table>
     <br>
     <a href="logout.php" type="button" class="logout-button">Logout</a>
 </div>
