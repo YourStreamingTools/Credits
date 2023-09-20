@@ -57,7 +57,10 @@ if (!is_dir($cacheDirectory)) {
 }
 if (file_exists($cacheFile) && time() - filemtime($cacheFile) < $cacheExpiration) {
   $allFollowers = json_decode(file_get_contents($cacheFile), true);
-  $liveData = "Follower results are cached up to 1 hour.";
+  $cacheTime = filemtime($cacheFile);
+  $currentTime = time();
+  $timeDifference = round(($currentTime - $cacheTime) / 60);
+  $liveData = "Follower results are cached up to 1 hour. (Cache updated: $timeDifference minutes ago)";
 } else {
   do {
       // Set up cURL request with headers
