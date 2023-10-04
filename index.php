@@ -144,13 +144,14 @@ while ($row = $raidResults->fetchArray(SQLITE3_ASSOC)) {
 <h1><?php echo "$greeting, <img id='profile-image' src='$twitch_profile_image_url' width='50px' height='50px' alt='$twitchDisplayName Profile Image'>$twitchDisplayName!"; ?></h1>
 <br>
 <form method="post"><button type="submit" name="deleteDatabase" class="button alert">Reset Data</button></form>
+<a href='mods.php'><button class='button'>View Mods</button></a><a href='vips.php'><button class='button'>View Vips</button></a>
 <br>
 <!-- Display sections for each data type -->
 <?php
 // Fetch and display recent followers data from the SQLite database
 echo "<div class='data-section'>";
 echo "<h4>Recent Followers";
-echo "<button class='button float-right' onclick='sendToDiscord(\"followers\", this.id)'>Send to Discord</button></h4>";
+echo "<button class='button float-right' onclick='sendToDiscord(\"followers\", this.id)'>Send to Discord</button><a href='followers.php'><button class='button float-right'>View All Followers</button></a></h4>";
 echo "<table class='custom-table'>";
 echo "<tr><th>Follower</th>";
 echo "<th>Timestamp</th></tr>";
@@ -166,7 +167,7 @@ echo "</div>";
 // Fetch and display recent subscribers data from the SQLite database
 echo "<div class='data-section'>";
 echo "<h4>Recent Subscribers";
-echo "<button class='button float-right' onclick='sendToDiscord(\"subscribers\")'>Send to Discord</button></h4>";
+echo "<button class='button float-right' onclick='sendToDiscord(\"subscribers\")'>Send to Discord</button><a href='subscribers.php'><button class='button float-right'>View All Subscribers</button></a></h4>";
 echo "<table class='custom-table'>";
 echo "<tr><th>Subscriber Name</th>";
 echo "<th>Tier</th>";
