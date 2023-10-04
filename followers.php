@@ -199,7 +199,7 @@ $displaySearchBar = count($allFollowers) > $followersPerPage;
     </div>
 <?php endif; ?>
 <h1>Your Followers:</h1>
-<h3><? echo $liveData ?></h3>
+<h3><?php echo $liveData ?></h3>
 <div class="followers-grid">
   <?php foreach ($followersForCurrentPage as $follower) : 
       $followerDisplayName = $follower['user_name'];
