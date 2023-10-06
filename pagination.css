@@ -80,6 +80,11 @@
     text-align: center;
 }
 
+.subscriber-broadcaster span {
+    display: block;
+    text-align: center;
+}
+
 .moderator-time {
     font-size: 12px;
     color: #888;
