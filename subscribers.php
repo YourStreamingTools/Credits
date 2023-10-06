@@ -217,7 +217,7 @@ $displaySearchBar = count($allSubscribers) > $subscribersPerPage;
         }
     endforeach;
     ?>
-</div>
+  </div>
 
   <!-- Pagination -->
   <div class="pagination">
