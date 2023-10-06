@@ -112,8 +112,8 @@ $displaySearchBar = count($allSubscribers) > $subscribersPerPage;
     <link rel="stylesheet" href="https://cdn.yourstreaming.tools/css/custom.css">
     <link rel="stylesheet" href="pagination.css">
     <script src="https://cdn.yourstreaming.tools/js/about.js"></script>
-  	<link rel="icon" href="https://cdn.yourstreaming.tools/img/logo.jpeg">
-  	<link rel="apple-touch-icon" href="https://cdn.yourstreaming.tools/img/logo.jpeg">
+    <link rel="icon" href="https://cdn.yourstreaming.tools/img/logo.jpeg">
+    <link rel="apple-touch-icon" href="https://cdn.yourstreaming.tools/img/logo.jpeg">
     <script src="sendtodiscord.js"></script>
     <script>var webhookURL = "<?php echo $webhookURL; ?>";</script>
   </head>
