@@ -167,7 +167,26 @@ $displaySearchBar = count($allSubscribers) > $subscribersPerPage;
   <?php endif; ?>
   <h1>Your Subscribers:</h1>
   <div class="subscribers-grid">
-    <?php foreach ($subscribersForCurrentPage as $subscriber) : 
+    <?php
+    // Define a custom sorting function to sort by subscription tier in descending order
+    usort($subscribersForCurrentPage, function ($a, $b) {
+        // Subscription tiers in descending order (Tier 3, Tier 2, Tier 1)
+        $tierOrder = ['3000', '2000', '1000'];
+        
+        // Get the tier values for $a and $b
+        $tierA = $a['tier'];
+        $tierB = $b['tier'];
+
+        // Compare the positions of the tiers in the order defined
+        $indexA = array_search($tierA, $tierOrder);
+        $indexB = array_search($tierB, $tierOrder);
+
+        // Compare the positions and return the comparison result
+        return $indexA - $indexB;
+    });
+
+    // Loop through the sorted array
+    foreach ($subscribersForCurrentPage as $subscriber) :
         $subscriberDisplayName = $subscriber['user_name'];
         $isGift = $subscriber['is_gift'] ?? false;
         $gifterName = $subscriber['gifter_name'] ?? '';
@@ -190,9 +209,8 @@ $displaySearchBar = count($allSubscribers) > $subscribersPerPage;
         } else {
             echo "<div class='subscriber'><span>$subscriberDisplayName</span><span>Subscription Tier: $subscriptionTier</span></div>";
         }
-    ?>
-    <?php endforeach; ?>
-  </div>
+    endforeach; ?>
+</div>
 
   <!-- Pagination -->
   <div class="pagination">
