@@ -204,12 +204,19 @@ $displaySearchBar = count($allSubscribers) > $subscribersPerPage;
             $subscriptionTier = 'Unknown';
         }
 
-        if ($isGift) {
-            echo "<div class='subscriber'><span>$subscriberDisplayName</span><span>Subscription Tier: $subscriptionTier</span><span>Gift Sub from $gifterName</span></div>";
+        // Check if $username is the same as $subscriberDisplayName
+        if ($username == $subscriberDisplayName) {
+            echo "<div class='subscriber-broadcaster'><span>$subscriberDisplayName</span><span>Subscription Tier: $subscriptionTier</span></div>";
         } else {
-            echo "<div class='subscriber'><span>$subscriberDisplayName</span><span>Subscription Tier: $subscriptionTier</span></div>";
+            // Check if it's a gift subscription
+            if ($isGift) {
+                echo "<div class='subscriber'><span>$subscriberDisplayName</span><span>Subscription Tier: $subscriptionTier</span><span>Gift Sub from $gifterName</span></div>";
+            } else {
+                echo "<div class='subscriber'><span>$subscriberDisplayName</span><span>Subscription Tier: $subscriptionTier</span></div>";
+            }
         }
-    endforeach; ?>
+    endforeach;
+    ?>
 </div>
 
   <!-- Pagination -->
