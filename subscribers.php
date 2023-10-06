@@ -205,7 +205,7 @@ $displaySearchBar = count($allSubscribers) > $subscribersPerPage;
         }
 
         // Check if $username is the same as $subscriberDisplayName
-        if ($username == $subscriberDisplayName) {
+        if ($twitchDisplayName == $subscriberDisplayName) {
             echo "<div class='subscriber-broadcaster'><span>$subscriberDisplayName</span><span>Subscription Tier: $subscriptionTier</span></div>";
         } else {
             // Check if it's a gift subscription
