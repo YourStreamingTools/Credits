@@ -4,7 +4,7 @@ import argparse
 import requests
 from datetime import datetime
 import twitchio
-from twitchio.ext import commands
+from twitchio.ext import commands, eventsub
 import os
 import logging
 import signal
